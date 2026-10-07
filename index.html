@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Fund Roadmap</title>
+
+<!-- These lines make it behave like an app when added to the Home Screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AI Roadmap">
+<meta name="theme-color" content="#0f1115">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-512.png">
+<link rel="manifest" href="manifest.json">
+
+<style>
+  :root {
+    --bg: #f6f5f1; --card: #ffffff; --ink: #16181d; --muted: #6b6f78;
+    --line: #e3e1da; --accent: #c8952c; --accent-soft: #f6ecd6;
+    --good: #2f8f5b; --good-soft: #e3f3ea;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1115; --card: #171a21; --ink: #eceae4; --muted: #9a9ea8;
+      --line: #262a33; --accent: #e0b04a; --accent-soft: #2b2416;
+      --good: #4fbf83; --good-soft: #15281e;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 20px 16px 60px; }
+
+  header h1 { font-size: 26px; line-height: 1.2; margin: 16px 0 4px; letter-spacing: -0.02em; }
+  header p { margin: 0; color: var(--muted); font-size: 14px; }
+
+  .overall {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    padding: 16px; margin: 20px 0;
+  }
+  .overall .row { display: flex; justify-content: space-between; align-items: baseline; }
+  .overall .big { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; }
+  .bar { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; margin-top: 10px; }
+  .bar > i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 99px; transition: width .3s; }
+  .phase.done .bar > i { background: var(--good); }
+
+  .tabs { display: flex; gap: 8px; margin: 0 0 16px; }
+  .tabs button {
+    flex: 1; padding: 10px; border-radius: 12px; border: 1px solid var(--line);
+    background: var(--card); color: var(--ink); font: inherit; font-size: 14px; font-weight: 600;
+  }
+  .tabs button.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  .phase {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    margin-bottom: 12px; overflow: hidden;
+  }
+  .phase.key { border: 2px solid var(--accent); }
+  .phase summary {
+    list-style: none; padding: 16px; cursor: pointer;
+  }
+  .phase summary::-webkit-details-marker { display: none; }
+  .phase .top { display: flex; justify-content: space-between; gap: 12px; }
+  .phase .num { font-size: 12px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .06em; }
+  .phase h2 { font-size: 18px; margin: 2px 0 0; line-height: 1.25; }
+  .phase .weeks { font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .phase .count { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .phase .tag {
+    display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px;
+    background: var(--accent-soft); color: var(--accent); margin-left: 6px; vertical-align: 2px;
+  }
+  .body { padding: 0 16px 16px; }
+  .body > p { margin: 0 0 12px; color: var(--muted); font-size: 15px; }
+
+  .item {
+    display: flex; gap: 12px; align-items: flex-start; padding: 12px 0;
+    border-top: 1px solid var(--line); cursor: pointer;
+  }
+  .item input { display: none; }
+  .box {
+    flex: none; width: 24px; height: 24px; border-radius: 7px; border: 2px solid var(--muted);
+    margin-top: 1px; display: grid; place-items: center; transition: .15s;
+  }
+  .item input:checked + .box { background: var(--good); border-color: var(--good); }
+  .item input:checked + .box::after { content: ""; width: 6px; height: 11px; border: solid #fff; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg) translate(-1px,-1px); }
+  .item .t { font-weight: 600; font-size: 15px; line-height: 1.35; }
+  .item .m { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .item input:checked ~ div .t { text-decoration: line-through; color: var(--muted); }
+  .item.gate { background: var(--good-soft); margin: 8px -16px 0; padding: 14px 16px; border-top: none; }
+  .item.gate .t::before { content: "Done when: "; color: var(--good); }
+
+  .info { font-size: 14px; margin: 12px 0 0; }
+  .info b { color: var(--ink); }
+  .info p { margin: 6px 0; color: var(--muted); }
+
+  .rules ol { padding-left: 20px; margin: 0; }
+  .rules li { margin: 8px 0; font-size: 15px; }
+  .rules li b { color: var(--ink); }
+  .parked h3 { font-size: 15px; margin: 16px 0 4px; }
+  .parked ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+  .parked li { margin: 4px 0; }
+
+  .tools { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .tools button {
+    padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--card);
+    color: var(--ink); font: inherit; font-size: 14px;
+  }
+  .note { font-size: 13px; color: var(--muted); margin-top: 10px; }
+  .hidden { display: none; }
+  .toast {
+    position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translateX(-50%);
+    background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 12px; font-size: 14px;
+    opacity: 0; transition: opacity .2s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>AI Hedge Fund Learning Roadmap</h1>
+    <p>24 weeks · ~22 hrs/week · every phase builds a piece of the system</p>
+  </header>
+
+  <div class="overall">
+    <div class="row">
+      <div><div class="big" id="pct">0%</div><div class="note" style="margin:0">overall progress</div></div>
+      <div class="note" style="margin:0;text-align:right" id="countAll"></div>
+    </div>
+    <div class="bar"><i id="barAll"></i></div>
+  </div>
+
+  <div class="tabs">
+    <button class="on" data-tab="plan">Roadmap</button>
+    <button data-tab="rules">How to use</button>
+    <button data-tab="parked">Parked</button>
+  </div>
+
+  <section id="plan"></section>
+
+  <section id="rules" class="hidden rules phase"><div class="body" style="padding-top:16px">
+    <ol>
+      <li><b>One course at a time.</b> Finish it or drop it before starting the next.</li>
+      <li><b>Build while you learn.</b> Every phase ends with a project that becomes a real piece of the hedge fund. About one hour of building per hour of watching.</li>
+      <li><b>Code along, don't just watch.</b> Pause, type the code yourself, change it, break it, fix it.</li>
+      <li><b>Test out of what you know.</b> Try the phase project first; if you can do it, skip ahead.</li>
+      <li><b>Use Google Colab for heavy work.</b> Your 8 GB laptop will struggle with machine learning; Colab runs Python in the browser for free.</li>
+      <li><b>Books fill the gaps.</b> Grus → Jansen → Bishop slots into Phases 1–4.</li>
+      <li><b>Watch long courses at 1.25x</b>, write notes in your own words, and quiz yourself with five questions at the end of each session.</li>
+    </ol>
+  </div></section>
+
+  <section id="parked" class="hidden parked phase"><div class="body" style="padding-top:16px">
+    <p style="margin:0;color:var(--muted)">Not bad videos, just not needed for the system right now.</p>
+    <h3>Business and agency (revisit for the investor app)</h3>
+    <ul>
+      <li>How To Build A $100K/Month AI Agency · 5h 27m</li>
+      <li>I Quit Selling This… Here's My Agency Course · 20h 05m</li>
+      <li>Start a One Person Business with Claude · 4h 29m</li>
+      <li>How I'd Start a 1-Person AI Business with Claude in 30 Days · 14m</li>
+      <li>57 Minutes of AI Training That Will Explode Your Business · 58m</li>
+      <li>The $106 Trillion Infrastructure Opportunity (McKinsey) · 50m</li>
+    </ul>
+    <h3>Not needed for your system</h3>
+    <ul>
+      <li>Blockchain Full Course · 8h 41m</li>
+      <li>Tableau Full Course · 8h 02m (you'll chart in Python)</li>
+      <li>Microsoft Foundry · 12m (Azure-specific)</li>
+      <li>Running 20+ GrokBot Agents · 56m</li>
+      <li>Learn All the Math in the World · 38m</li>
+      <li>How to Self Study Pure Math · 10m</li>
+      <li>Last Man Standing (Moon Squad short)</li>
+    </ul>
+    <h3>Mindset — Sunday watching</h3>
+    <ul>
+      <li>Naval Ravikant on The Knowledge Project · 2h 02m</li>
+      <li>You Only Need 6 Months to Change Your Life (Dan Martell) · 22m</li>
+      <li>20 Years of Productivity Advice in 15 Minutes (Charles Duhigg) · 16m</li>
+      <li>What Actually Matters in Your 20s · 17m</li>
+      <li>Read Books That Challenge Your Mind (Robert Greene) · 5m</li>
+    </ul>
+  </div></section>
+
+  <div class="tools">
+    <button id="exportBtn">Copy progress code</button>
+    <button id="importBtn">Paste progress code</button>
+    <button id="resetBtn">Reset</button>
+  </div>
+  <p class="note">Progress saves on each device separately. To move it from iPad to iPhone, tap “Copy progress code” on one and “Paste progress code” on the other.</p>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------- 1. The roadmap content ----------
+// Each item has a short permanent "id" so your ticks stay saved even if titles change.
+const PHASES = [
+  { id: "p0", title: "Learn how to learn", weeks: "Week 1",
+    intro: "One video and a setup session, so the next 500 hours actually stick.",
+    items: [
+      ["p0a", "My System For Learning Any Skill Without Wasting Time", "Justin Sung · 34m"],
+      ["p0b", "Set up your toolkit", "Python, VS Code, a GitHub account, a Google Colab notebook"],
+    ],
+    gate: ["p0g", "A learning-log notebook exists and your first Python script prints a gold price from a CSV."] },
+
+  { id: "p1", title: "Python and data foundations", weeks: "Weeks 2–5",
+    intro: "Python is the language; pandas is how you handle price data — think of it as Excel you control with code.",
+    items: [
+      ["p1a", "The Data Movie: Data Literacy Explained Visually", "Data with Baraa · 1h 56m · big picture first"],
+      ["p1b", "Python for Data Science", "freeCodeCamp · 12h 20m"],
+      ["p1c", "Data Analysis with Python: NumPy, Pandas, Data Visualization", "freeCodeCamp · 9h 56m"],
+      ["p1d", "Claude Code Tutorial #1: Introduction & Setup", "10m"],
+      ["p1e", "Claude Code for Beginners", "freeCodeCamp · 4h 28m"],
+    ],
+    info: [["Skip", "The complete guide to Python (Clear Code, 11h 09m) covers the same ground — keep it as a reference."],
+           ["Book", "Joel Grus, Data Science from Scratch — Python and visualization chapters."]],
+    gate: ["p1g", "A year of XAUUSD 15-min candles from MT5 loaded in pandas, with the average range of the Asia, London and NY sessions. → First piece of the Observer."] },
+
+  { id: "p2", title: "Statistics and math for trading", weeks: "Weeks 6–8", key: true,
+    intro: "The most important phase: statistics is how you prove an edge is real and not luck.",
+    items: [
+      ["p2a", "Statistics: A Full Lecture to Learn Data Science", "numiqo · 4h 55m"],
+      ["p2b", "Everything About Calculus Explained Slowly", "Bub Explains · 2h 13m · light, for intuition"],
+      ["p2c", "Optional: Introduction to Mathematical Thinking", "Nerd's Lesson · 11h 28m · useful later for Bishop"],
+    ],
+    info: [["Focus on", "Distributions, expected value, variance, sample size, confidence intervals, hypothesis tests, correlation."],
+           ["Book", "Grus — statistics and probability chapters."]],
+    gate: ["p2g", "Win rate, average R and expectancy with a confidence interval on your trade log — and H-01 (invalid BOS → losses) tested with real numbers."] },
+
+  { id: "p3", title: "Algorithmic trading and backtesting", weeks: "Weeks 9–11",
+    intro: "Turn your price-action rules into code and test them on history — the bridge between your trading and the AI system.",
+    items: [
+      ["p3a", "Algorithmic Trading Python for Beginners", "QuantProgram · 3h 01m"],
+      ["p3b", "Python Algorithmic Trading Course: Massive, SnapTrade & Alpaca", "freeCodeCamp · 1h 44m · Alpaca isn't MT5: learn the pattern, then use the MetaTrader5 Python package"],
+      ["p3c", "How I Built My Own AI Trading Assistant Using Claude Cowork", "Alex Carter · 12m"],
+    ],
+    info: [["Focus on", "The backtest loop, spread and slippage costs, look-ahead bias, walk-forward testing, max drawdown, Sharpe ratio."],
+           ["Book", "Stefan Jansen, Machine Learning for Algorithmic Trading — opening chapters."]],
+    gate: ["p3g", "One rule (e.g. BOS + POI entry) runs as code on 2+ years of XAUUSD with spread, compared with your manual results. → Seed of the Executor."] },
+
+  { id: "p4", title: "Machine learning for the Pattern Learner", weeks: "Weeks 12–17",
+    intro: "The longest phase and the one your playlist covers least, so the books carry more weight here.",
+    items: [
+      ["p4a", "Everything About Machine Learning Explained Slowly", "Cosmo Explains · 2h 07m"],
+      ["p4b", "Steal My Machine Learning Project Template", "Marina Wyss · 24m"],
+      ["p4c", "Introduction to Tensors", "11m · only right before any deep learning"],
+      ["p4d", "Add a hands-on scikit-learn course to the playlist", "Gap to fill"],
+    ],
+    info: [["Focus on", "Train/test splits, overfitting, cross-validation for time series, features from candles, classification models."],
+           ["Book", "Jansen — ML chapters; López de Prado, Advances in Financial Machine Learning — backtest overfitting."]],
+    gate: ["p4g", "A model trained in Colab labels past setups as valid/invalid BOS, tested walk-forward, beating a random baseline on unseen data. → Pattern Learner v1."] },
+
+  { id: "p5", title: "AI agents and AI engineering", weeks: "Weeks 18–21",
+    intro: "Agents are the glue: they watch, log, explain and alert, while your rules and the Pattern Learner make the trading decisions.",
+    items: [
+      ["p5a", "How I'd Learn AI Engineering in 2026 (Complete Roadmap)", "Dave Ebbelaar · 19m"],
+      ["p5b", "Essential Skills for Becoming an AI Engineer: RAG, AI Agents, & More", "IBM Technology"],
+      ["p5c", "Claude's Creator Just Told Us How to Actually Use Claude in 2026", "AI Edge · 21m"],
+      ["p5d", "900+ Hours of Learning Claude Code/Cursor in 10 Minutes", "Andrew Codesmith · 10m"],
+      ["p5e", "How to Build an AI Agent Team for Automated Workflows", "AI Master · 10m"],
+      ["p5f", "The Multi-Agent Architecture That Actually Ships", "AI Engineer · 19m"],
+      ["p5g2", "Build & Sell with Claude Code", "Nate Herk · 10h · sub-agents, skills, agent teams chapters"],
+      ["p5h", "Optional: $75M Founder Reveals His Agentic Engineering Setup", "David Ondrej · 52m"],
+      ["p5i", "Optional: Build an Agentic Software Factory: Deep Dive", "Steve (Builder.io) · 18m"],
+    ],
+    info: [["Focus on", "Tool calling, RAG (AI searching your own data before answering), agent loops, guardrails, logging."]],
+    gate: ["p5g", "An agent logs each closed MT5 trade and answers questions like “show my losing trades with a misread BOS this month.” → Journal + Analyst."] },
+
+  { id: "p6", title: "Systems, databases and scale", weeks: "Weeks 22–24",
+    intro: "Turn separate scripts into one system that runs many accounts and brokers reliably.",
+    items: [
+      ["p6a", "System Design Course: APIs, Databases, Caching, CDNs, Load Balancing", "freeCodeCamp · 2h 05m · Hayk Simonyan's version is the same topics — watch one"],
+      ["p6b", "SQL for Data Analytics: Intermediate Course + Project", "6h 26m"],
+      ["p6c", "The Future of Computer Science", "Lattice · 9m"],
+    ],
+    info: [["Reference only", "SQL Full Course for Beginners (30h) — look things up when stuck."],
+           ["After this", "Christopher Bishop, Pattern Recognition and Machine Learning — the bridge to your master's and PhD."]],
+    gate: ["p6g", "Candles and journal live in a database, and you can draw how the five modules connect across brokers and accounts."] },
+];
+
+// ---------- 2. Saving ticks on this device ----------
+const KEY = "aiFundRoadmap.v1";
+function load() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
+function save(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
+let state = load();
+let openPhases = state._open || ["p0"];
+
+// ---------- 3. Drawing the page ----------
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function itemHTML(id, title, meta, isGate) {
+  return `<label class="item${isGate ? " gate" : ""}">
+    <input type="checkbox" data-id="${id}" ${state[id] ? "checked" : ""}>
+    <span class="box"></span>
+    <div><div class="t">${esc(title)}</div>${meta ? `<div class="m">${esc(meta)}</div>` : ""}</div>
+  </label>`;
+}
+
+function render() {
+  document.getElementById("plan").innerHTML = PHASES.map((p, i) => `
+    <details class="phase${p.key ? " key" : ""}" id="${p.id}" ${openPhases.includes(p.id) ? "open" : ""}>
+      <summary>
+        <div class="top">
+          <div><div class="num">Phase ${i}${p.key ? '<span class="tag">Most important</span>' : ""}</div><h2>${esc(p.title)}</h2></div>
+          <div class="weeks">${p.weeks}</div>
+        </div>
+        <div class="count" data-count="${p.id}"></div>
+        <div class="bar"><i data-bar="${p.id}"></i></div>
+      </summary>
+      <div class="body">
+        <p>${esc(p.intro)}</p>
+        ${p.items.map(it => itemHTML(it[0], it[1], it[2])).join("")}
+        ${p.info ? `<div class="info">${p.info.map(([k, v]) => `<p><b>${k}:</b> ${esc(v)}</p>`).join("")}</div>` : ""}
+        ${itemHTML(p.gate[0], p.gate[1], "", true)}
+      </div>
+    </details>`).join("");
+  updateProgress();
+}
+
+function updateProgress() {
+  let done = 0, total = 0;
+  PHASES.forEach(p => {
+    const ids = p.items.map(it => it[0]).concat(p.gate[0]);
+    const d = ids.filter(id => state[id]).length;
+    done += d; total += ids.length;
+    document.querySelector(`[data-count="${p.id}"]`).textContent = `${d} of ${ids.length} done`;
+    document.querySelector(`[data-bar="${p.id}"]`).style.width = (d / ids.length * 100) + "%";
+    document.getElementById(p.id).classList.toggle("done", d === ids.length);
+  });
+  const pct = Math.round(done / total * 100);
+  document.getElementById("pct").textContent = pct + "%";
+  document.getElementById("barAll").style.width = pct + "%";
+  document.getElementById("countAll").textContent = `${done} of ${total} steps`;
+}
+
+// ---------- 4. Reacting to taps ----------
+document.getElementById("plan").addEventListener("change", e => {
+  const id = e.target.dataset.id;
+  if (!id) return;
+  state[id] = e.target.checked;
+  save(state);
+  updateProgress();
+});
+
+document.getElementById("plan").addEventListener("toggle", e => {
+  openPhases = PHASES.filter(p => document.getElementById(p.id).open).map(p => p.id);
+  state._open = openPhases;
+  save(state);
+}, true);
+
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b));
+  ["plan", "rules", "parked"].forEach(t => document.getElementById(t).classList.toggle("hidden", t !== b.dataset.tab));
+});
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 1800);
+}
+
+document.getElementById("exportBtn").onclick = async () => {
+  const ticked = Object.keys(state).filter(k => state[k] === true);
+  const code = btoa(ticked.join(","));
+  try { await navigator.clipboard.writeText(code); toast("Progress code copied"); }
+  catch (e) { prompt("Copy this progress code:", code); }
+};
+
+document.getElementById("importBtn").onclick = () => {
+  const code = prompt("Paste your progress code:");
+  if (!code) return;
+  try {
+    const ids = atob(code.trim()).split(",").filter(Boolean);
+    state = { _open: openPhases };
+    ids.forEach(id => state[id] = true);
+    save(state); render(); toast("Progress loaded");
+  } catch (e) { toast("That code didn't work"); }
+};
+
+document.getElementById("resetBtn").onclick = () => {
+  if (confirm("Untick everything?")) { state = {}; openPhases = ["p0"]; save(state); render(); }
+};
+
+render();
+</script>
+</body>
+</html>
