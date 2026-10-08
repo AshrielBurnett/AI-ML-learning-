@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AI Fund Roadmap</title>
+<title>AI Fund Build Plan</title>
 
 <!-- These lines make it behave like an app when added to the Home Screen -->
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,13 +19,13 @@
   :root {
     --bg: #f6f5f1; --card: #ffffff; --ink: #16181d; --muted: #6b6f78;
     --line: #e3e1da; --accent: #c8952c; --accent-soft: #f6ecd6;
-    --good: #2f8f5b; --good-soft: #e3f3ea;
+    --good: #2f8f5b; --good-soft: #e3f3ea; --learn: #f3f2ed;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #0f1115; --card: #171a21; --ink: #eceae4; --muted: #9a9ea8;
       --line: #262a33; --accent: #e0b04a; --accent-soft: #2b2416;
-      --good: #4fbf83; --good-soft: #15281e;
+      --good: #4fbf83; --good-soft: #15281e; --learn: #12151b;
     }
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -34,7 +34,7 @@
     font: 16px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
     padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
   }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 20px 16px 60px; }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 20px 16px 60px; }
 
   header h1 { font-size: 26px; line-height: 1.2; margin: 16px 0 4px; letter-spacing: -0.02em; }
   header p { margin: 0; color: var(--muted); font-size: 14px; }
@@ -43,16 +43,18 @@
     background: var(--card); border: 1px solid var(--line); border-radius: 16px;
     padding: 16px; margin: 20px 0;
   }
-  .overall .row { display: flex; justify-content: space-between; align-items: baseline; }
+  .overall .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
   .overall .big { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; }
+  .overall .next { font-size: 14px; margin-top: 10px; }
+  .overall .next b { color: var(--accent); }
   .bar { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; margin-top: 10px; }
   .bar > i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 99px; transition: width .3s; }
   .phase.done .bar > i { background: var(--good); }
 
-  .tabs { display: flex; gap: 8px; margin: 0 0 16px; }
+  .tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin: 0 0 16px; }
   .tabs button {
-    flex: 1; padding: 10px; border-radius: 12px; border: 1px solid var(--line);
-    background: var(--card); color: var(--ink); font: inherit; font-size: 14px; font-weight: 600;
+    padding: 10px 2px; border-radius: 12px; border: 1px solid var(--line);
+    background: var(--card); color: var(--ink); font: inherit; font-size: 12.5px; font-weight: 600;
   }
   .tabs button.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
@@ -61,21 +63,30 @@
     margin-bottom: 12px; overflow: hidden;
   }
   .phase.key { border: 2px solid var(--accent); }
-  .phase summary {
-    list-style: none; padding: 16px; cursor: pointer;
-  }
+  .phase summary { list-style: none; padding: 16px; cursor: pointer; }
   .phase summary::-webkit-details-marker { display: none; }
   .phase .top { display: flex; justify-content: space-between; gap: 12px; }
   .phase .num { font-size: 12px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .06em; }
   .phase h2 { font-size: 18px; margin: 2px 0 0; line-height: 1.25; }
-  .phase .weeks { font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .phase .weeks { font-size: 13px; color: var(--muted); white-space: nowrap; text-align: right; }
   .phase .count { font-size: 13px; color: var(--muted); margin-top: 6px; }
   .phase .tag {
     display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px;
     background: var(--accent-soft); color: var(--accent); margin-left: 6px; vertical-align: 2px;
+    text-transform: none; letter-spacing: 0;
   }
   .body { padding: 0 16px 16px; }
   .body > p { margin: 0 0 12px; color: var(--muted); font-size: 15px; }
+
+  /* Build and Learn side by side on iPad, stacked on phone */
+  .cols { display: grid; gap: 12px; }
+  @media (min-width: 720px) { .cols { grid-template-columns: 1.15fr 1fr; align-items: start; } }
+  .col h3 {
+    font-size: 12px; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 2px; color: var(--muted);
+  }
+  .col.learn { background: var(--learn); border: 1px solid var(--line); border-radius: 12px; padding: 12px 12px 4px; }
+  .col.learn h3::after { content: " · open when you get stuck"; text-transform: none; letter-spacing: 0; font-weight: 400; }
+  .col .item:first-of-type { border-top: none; }
 
   .item {
     display: flex; gap: 12px; align-items: flex-start; padding: 12px 0;
@@ -90,20 +101,32 @@
   .item input:checked + .box::after { content: ""; width: 6px; height: 11px; border: solid #fff; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg) translate(-1px,-1px); }
   .item .t { font-weight: 600; font-size: 15px; line-height: 1.35; }
   .item .m { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .item .kind {
+    display: inline-block; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+    color: var(--muted); border: 1px solid var(--line); border-radius: 6px; padding: 0 5px; margin-right: 6px; vertical-align: 1px;
+  }
   .item input:checked ~ div .t { text-decoration: line-through; color: var(--muted); }
-  .item.gate { background: var(--good-soft); margin: 8px -16px 0; padding: 14px 16px; border-top: none; }
+  .item.isClaude .kind { color: var(--accent); border-color: var(--accent); }
+  .claude-row .bar > i { background: linear-gradient(90deg, var(--accent), #e46b5a); }
+  .item.gate { background: var(--good-soft); margin: 12px -16px 0; padding: 14px 16px; border-top: none; }
   .item.gate .t::before { content: "Done when: "; color: var(--good); }
 
   .info { font-size: 14px; margin: 12px 0 0; }
   .info b { color: var(--ink); }
   .info p { margin: 6px 0; color: var(--muted); }
 
-  .rules ol { padding-left: 20px; margin: 0; }
-  .rules li { margin: 8px 0; font-size: 15px; }
-  .rules li b { color: var(--ink); }
-  .parked h3 { font-size: 15px; margin: 16px 0 4px; }
+  .howto summary { font-weight: 600; }
+  .howto ol { padding-left: 20px; margin: 0; }
+  .howto li { margin: 8px 0; font-size: 15px; }
+  .parked h3, .fund h3, .exp h3 { font-size: 15px; margin: 16px 0 4px; }
   .parked ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
   .parked li { margin: 4px 0; }
+
+  .years { display: grid; gap: 8px; margin: 4px 0 12px; }
+  .year { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .year.now { border-color: var(--accent); background: var(--accent-soft); }
+  .year b { font-size: 14px; }
+  .year div { font-size: 13px; color: var(--muted); margin-top: 2px; }
 
   .tools { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
   .tools button {
@@ -118,62 +141,145 @@
     opacity: 0; transition: opacity .2s; pointer-events: none;
   }
   .toast.show { opacity: 1; }
+
+  /* Rewards */
+  .lvl { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 14px; }
+  .lvl .row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .lvl b { color: var(--accent); }
+  .lvl .bar { height: 6px; margin-top: 6px; }
+  .lvl .sub { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+  .ahead { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .ahead b { color: var(--good); }
+  .rw { border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-top: 10px; }
+  .rw.unlocked { border-color: var(--good); background: var(--good-soft); }
+  .rw-top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .rw-top b { font-size: 15px; }
+  .pill { font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 99px; white-space: nowrap; background: var(--line); color: var(--muted); }
+  .pill.on { background: var(--good); color: #fff; }
+  .pill.gold { background: var(--accent); color: #fff; }
+  .rw .m { font-size: 13px; color: var(--muted); margin: 2px 0 8px; }
+  .rw label { display: block; font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+  .rw input {
+    display: block; width: 100%; margin-top: 3px; padding: 9px 10px; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; font-size: 16px;
+  }
+  .xp-rules { font-size: 14px; color: var(--muted); margin: 0; padding-left: 18px; }
+  .xp-rules li { margin: 3px 0; }
+  .myreward { font-size: 13px; color: var(--muted); margin: 0 0 12px; }
+  .myreward b { color: var(--accent); }
+  .confetti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 50; }
+  .confetti i { position: absolute; top: -12px; width: 8px; height: 12px; border-radius: 2px; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>AI Hedge Fund Learning Roadmap</h1>
-    <p>24 weeks · ~22 hrs/week · every phase builds a piece of the system</p>
+    <h1>AI Hedge Fund & Agents Plan</h1>
+    <p>2x compressed pace · one path: hedge fund system + AI agents + agency + Claude mastery · build first, learn what each step needs</p>
   </header>
 
   <div class="overall">
     <div class="row">
-      <div><div class="big" id="pct">0%</div><div class="note" style="margin:0">overall progress</div></div>
+      <div><div class="big" id="pct">0%</div><div class="note" style="margin:0">learning path progress</div></div>
       <div class="note" style="margin:0;text-align:right" id="countAll"></div>
     </div>
     <div class="bar"><i id="barAll"></i></div>
+    <div class="next" id="upNext"></div>
+    <div class="lvl"><div class="row"><span id="lvlName"></span><span id="lvlXp"></span></div><div class="bar"><i id="lvlBar"></i></div><div class="sub" id="lvlNext"></div></div>
+    <div class="ahead" id="aheadLine"></div>
+    <div class="lvl claude-row"><div class="row"><span id="clName"></span><span id="clCount"></span></div><div class="bar"><i id="clBar"></i></div><div class="sub">Gold badges in the path are Claude-specific items.</div></div>
   </div>
 
   <div class="tabs">
-    <button class="on" data-tab="plan">Roadmap</button>
-    <button data-tab="rules">How to use</button>
+    <button class="on" data-tab="plan">Path</button>
+    <button data-tab="rewards">Rewards</button>
+    <button data-tab="business">Business</button>
+    <button data-tab="exp">Expertise</button>
     <button data-tab="parked">Parked</button>
   </div>
 
-  <section id="plan"></section>
 
-  <section id="rules" class="hidden rules phase"><div class="body" style="padding-top:16px">
-    <ol>
-      <li><b>One course at a time.</b> Finish it or drop it before starting the next.</li>
-      <li><b>Build while you learn.</b> Every phase ends with a project that becomes a real piece of the hedge fund. About one hour of building per hour of watching.</li>
-      <li><b>Code along, don't just watch.</b> Pause, type the code yourself, change it, break it, fix it.</li>
-      <li><b>Test out of what you know.</b> Try the phase project first; if you can do it, skip ahead.</li>
-      <li><b>Use Google Colab for heavy work.</b> Your 8 GB laptop will struggle with machine learning; Colab runs Python in the browser for free.</li>
-      <li><b>Books fill the gaps.</b> Grus → Jansen → Bishop slots into Phases 1–4.</li>
-      <li><b>Watch long courses at 1.25x</b>, write notes in your own words, and quiz yourself with five questions at the end of each session.</li>
-    </ol>
+  <section id="rewards" class="hidden phase"><div class="body" style="padding-top:16px">
+    <p style="margin:0 0 8px;color:var(--muted)">Set a reward for each milestone, plus a bonus you only get if you pass it on or before the target date. Pick things you'll genuinely look forward to, and make the later milestones bigger.</p>
+    <h3 style="font-size:15px;margin:12px 0 4px">How you earn XP</h3>
+    <ul class="xp-rules">
+      <li>Build step: 10 XP · Learn item: 5 XP</li>
+      <li>Milestone gate passed: 50 XP</li>
+      <li>Speed bonus: +5 XP for every day you beat the target (up to +200)</li>
+      <li>Business step: 10 XP · Expertise item: 5 XP</li>
+    </ul>
+    <div id="rewardList"></div>
+  </div></section>
+
+  <section id="planTab">
+    <details class="phase howto">
+      <summary>How to use this plan</summary>
+      <div class="body">
+        <ol>
+          <li><b>2x compressed pace.</b> Every 90 days of the original plan now takes 45. Target dates and speed bonuses use the compressed dates.</li>
+          <li><b>Build first.</b> Start each milestone in the Build column. Open a Learn item the moment you get stuck, not before.</li>
+          <li><b>About 70% building, 30% learning.</b> Milestones overlap more now; run two at once.</li>
+          <li><b>Speed tactic: watch at 1.5–2x</b> and skip parts you already know. Stop a course the moment you can do the build.</li>
+          <li><b>Speed tactic: Claude Code drafts, you verify.</b> Let it write the first version; your job is to understand it, test it and fix it.</li>
+          <li><b>Speed tactic: chapters, not books.</b> Read only the chapters listed. Time-box being stuck to 45 minutes, then ask for help.</li>
+          <li><b>What doesn't compress:</b> the 2-week journal run, the 30-day demo run, the 3-year audited record. That's market time, not learning time.</li>
+          <li><b>Claude mastery is woven in.</b> Items with a gold badge are Claude-specific, and the top card tracks your Claude level. Claude ships features fast: this list is current as of October 2026, and the weekly Anthropic news habit (milestone 1) keeps it fresh.</li>
+          <li><b>One path: fund, agents, agency.</b> Every agent you build is part of your trading system first and your agency portfolio second. Learn once, use it twice.</li>
+          <li><b>The agency milestones (12 and 14) add real hours,</b> about 8–10 a week from February, once your trading system runs on demo.</li>
+          <li><b>Your edge first, ML later.</b> Milestone 3 (writing your rules down precisely) is the flagship. Everything else serves it.</li>
+          <li><b>Assume your backtest is lying</b> until it survives walk-forward testing and double the costs.</li>
+          <li><b>The Executor is plain code, never an AI.</b> AI can watch, log and explain; it never places orders.</li>
+          <li><b>No real money until 30 days on demo</b> with zero manual fixes.</li>
+          <li><b>Use Google Colab for heavy work.</b> Your 8 GB laptop will struggle with ML.</li>
+          <li><b>Expertise tab:</b> deeper study at a lighter pace. It never blocks the build; it's the first thing to drop in a heavy week.</li>
+          <li><b>Rest is risk management.</b> A compressed plan is a sprint, and burnout is the biggest threat to it. With a 2:30 AM start, keep Sundays off and protect your sleep.</li>
+        </ol>
+      </div>
+    </details>
+    <div id="plan"></div>
+  </section>
+
+  <section id="fund" class="hidden fund phase"><div class="body" style="padding-top:16px">
+    <p style="margin:0 0 12px;color:var(--muted)">Runs alongside the build. Your learning and building are compressed 2x, but the 3-year audited track record can't be sped up. That's why opening the account is step one of Milestone 1.</p>
+    <div class="years">
+      <div class="year now"><b>Year 1 · Build and prove (compressed: now → Apr 2027)</b><div>Gate: your edge is statistically real and the system runs automatically.</div></div>
+      <div class="year"><b>Year 2 · Systematise and scale (build work can finish early)</b><div>Gate: the system's live results match its backtest. Needs real months of live trading.</div></div>
+      <div class="year"><b>Year 3 · Institutionalise and launch (~late 2029)</b><div>Gate: registered fund, audited record, first outside capital. The 3-year audited record can't be compressed, so this date holds.</div></div>
+    </div>
+    <div id="fundItems"></div>
+    <p class="note">This is learning and planning material, not financial, legal or tax advice. Fund setup, licensing and cross-border structuring need qualified professionals.</p>
+  </div></section>
+
+  <section id="exp" class="hidden exp phase"><div class="body" style="padding-top:16px">
+    <p style="margin:0;color:var(--muted)">Deeper understanding for the long run and your path to a master's and PhD, in this order. Dates are compressed 2x too, but this is the first thing to slide in a heavy week. It never blocks the build.</p>
+    <div id="expItems"></div>
+    <p class="note">After this: the rest of Bishop (Ch. 2, 5–12) in Year 3 or during a master's.</p>
   </div></section>
 
   <section id="parked" class="hidden parked phase"><div class="body" style="padding-top:16px">
-    <p style="margin:0;color:var(--muted)">Not bad videos, just not needed for the system right now.</p>
-    <h3>Business and agency (revisit for the investor app)</h3>
+    <p style="margin:0;color:var(--muted)">Not bad videos, just not needed right now. The agency and agent videos are now part of the path.</p>
+    <h3>Deferred until a problem needs it</h3>
     <ul>
-      <li>How To Build A $100K/Month AI Agency · 5h 27m</li>
-      <li>I Quit Selling This… Here's My Agency Course · 20h 05m</li>
-      <li>Start a One Person Business with Claude · 4h 29m</li>
-      <li>How I'd Start a 1-Person AI Business with Claude in 30 Days · 14m</li>
-      <li>57 Minutes of AI Training That Will Explode Your Business · 58m</li>
-      <li>The $106 Trillion Infrastructure Opportunity (McKinsey) · 50m</li>
+      <li>Introduction to Tensors · 11m (deep learning, Year 2+)</li>
+      <li>Introduction to Mathematical Thinking · 11h 28m (Year 3+)</li>
+      <li>Learn All the Math in the World · 38m</li>
+      <li>How to Self Study Pure Math · 10m</li>
+      <li>Not on the list at all: stochastic calculus, reinforcement learning, C++, CFA, a quant master's</li>
+    </ul>
+    <h3>Reference only (look things up, don't watch through)</h3>
+    <ul>
+      <li>The complete guide to Python (Clear Code) · 11h 09m</li>
+      <li>SQL Full Course for Beginners · 30h</li>
+      <li>System Design Explained (Hayk Simonyan) · 2h 04m (same as the freeCodeCamp one)</li>
+      <li>Python for Data Analysis — Wes McKinney (the pandas reference)</li>
     </ul>
     <h3>Not needed for your system</h3>
     <ul>
       <li>Blockchain Full Course · 8h 41m</li>
       <li>Tableau Full Course · 8h 02m (you'll chart in Python)</li>
-      <li>Microsoft Foundry · 12m (Azure-specific)</li>
       <li>Running 20+ GrokBot Agents · 56m</li>
-      <li>Learn All the Math in the World · 38m</li>
-      <li>How to Self Study Pure Math · 10m</li>
+      <li>The $106 Trillion Infrastructure Opportunity (McKinsey) · 50m</li>
       <li>Last Man Standing (Moon Squad short)</li>
     </ul>
     <h3>Mindset — Sunday watching</h3>
@@ -183,6 +289,7 @@
       <li>20 Years of Productivity Advice in 15 Minutes (Charles Duhigg) · 16m</li>
       <li>What Actually Matters in Your 20s · 17m</li>
       <li>Read Books That Challenge Your Mind (Robert Greene) · 5m</li>
+      <li>The Future of Computer Science (Lattice) · 9m</li>
     </ul>
   </div></section>
 
@@ -196,176 +303,591 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ---------- 1. The roadmap content ----------
-// Each item has a short permanent "id" so your ticks stay saved even if titles change.
-const PHASES = [
-  { id: "p0", title: "Learn how to learn", weeks: "Week 1",
-    intro: "One video and a setup session, so the next 500 hours actually stick.",
-    items: [
-      ["p0a", "My System For Learning Any Skill Without Wasting Time", "Justin Sung · 34m"],
-      ["p0b", "Set up your toolkit", "Python, VS Code, a GitHub account, a Google Colab notebook"],
+// ---------- 1. The build plan ----------
+// Each item: [permanent id, title, details, kind]. Kinds: build, do, video, book.
+// Ids never change, so your ticks stay saved when the plan is updated.
+const MILESTONES = [
+  { id: "m1", title: "Set up and start the clock", when: "Week 1", target: "2026-10-18",
+    intro: "Get your tools working and start the one thing that can't be sped up: an auditable track record.",
+    build: [
+      ["fa1", "Open an auditable trading account on real capital", "In your own name, with money you can afford, at a broker with clean, verifiable statements. Prop-firm accounts don't count as a track record: keep them running for income and trade this one alongside. Get professional advice on the setup. Submitting the application counts for this week; approval can take longer.", "do"],
+      ["m1b", "Check if IC Markets offers real CME futures (MNQ, MGC)", "Real exchange-traded contracts, not CFDs on futures. If it's CFDs only, open the auditable account with a genuine futures broker instead.", "do"],
+      ["p0b", "Set up your toolkit", "Python, VS Code, git, a GitHub account and a Google Colab notebook — on your Windows laptop (MT5's Python package needs Windows).", "do"],
+      ["m1a", "Export your MT5 trade history and XAUUSD candles to CSV", "The raw material for everything that follows.", "build"],
+      ["c1", "Set up Claude everywhere", "Web, desktop app and phone. Turn on memory, and learn which model to use for which job (fast and cheap vs. deep thinking).", "claude"],
+      ["c2", "Create a Claude Project for the fund", "Custom instructions plus your rulebook, trade notes and this plan as project files, so every chat starts with full context.", "claude"],
     ],
-    gate: ["p0g", "A learning-log notebook exists and your first Python script prints a gold price from a CSV."] },
+    learn: [
+      ["p0a", "My System For Learning Any Skill Without Wasting Time", "Justin Sung · 34m · watch first", "video"],
+      ["m1l", "Futures basics: index vs. futures vs. CFD", "CME Group's free education courses (cmegroup.com). Key facts: NQ = index × $20, MNQ = index × $2; futures expire and roll; a CFD is your broker's private copy.", "course"],
+      ["p1d", "Claude Code Tutorial #1: Introduction & Setup", "10m", "video"],
+      ["p5c", "Claude's Creator Just Told Us How to Actually Use Claude in 2026", "AI Edge · 21m", "video"],
+      ["p5a", "How I'd Learn AI Engineering in 2026 (Complete Roadmap)", "Dave Ebbelaar · 19m · the big picture of AI engineering", "video"],
+      ["p1f", "Git and GitHub basics", "Commit, push, branch. Your commit history becomes your research audit trail. Any short beginner tutorial.", "video"],
+      ["c3", "Claude 101 — Anthropic Academy", "Free · the official tour of what Claude can do.", "course"],
+      ["c4", "AI Fluency: Framework & Foundations — Anthropic Academy", "Free · how to work with AI well: delegating, describing, checking its work.", "course"],
+      ["c41", "Follow Anthropic: news, engineering blog, YouTube and release notes", "Claude ships new features constantly. Skim weekly and add anything useful to this plan.", "read"],
+    ],
+    gate: ["p0g", "Your trade history loads in Python and prints your win rate and average R, and the code is on GitHub."] },
 
-  { id: "p1", title: "Python and data foundations", weeks: "Weeks 2–5",
-    intro: "Python is the language; pandas is how you handle price data — think of it as Excel you control with code.",
-    items: [
-      ["p1a", "The Data Movie: Data Literacy Explained Visually", "Data with Baraa · 1h 56m · big picture first"],
-      ["p1b", "Python for Data Science", "freeCodeCamp · 12h 20m"],
-      ["p1c", "Data Analysis with Python: NumPy, Pandas, Data Visualization", "freeCodeCamp · 9h 56m"],
-      ["p1d", "Claude Code Tutorial #1: Introduction & Setup", "10m"],
-      ["p1e", "Claude Code for Beginners", "freeCodeCamp · 4h 28m"],
+  { id: "m2", title: "Journal agent: your first AI agent", when: "Weeks 1–3", target: "2026-10-29",
+    intro: "Your first live piece of the system and your first real AI agent: a model that calls tools in a loop until the job is done. Useful to your trading from day one, and the first piece of your agency portfolio.",
+    build: [
+      ["m2a", "Connect Python to MT5", "Using the MetaTrader5 Python package.", "build"],
+      ["m2b", "Log every closed trade automatically", "Entry, exit, R, session, instrument — into a CSV or SQLite file.", "build"],
+      ["a1a", "Call Claude from Python", "Get an API key and write a script that sends a prompt and prints the answer.", "build"],
+      ["a1b", "Give the agent two tools", "Python functions it can call: read your journal, and calculate your stats.", "build"],
+      ["a1c", "Write a system prompt and keep it in git", "Role, rules, output format. Treat prompts like code: versioned and tested.", "build"],
+      ["m2c", "Add a weekly AI summary", "Claude reads the week's trades and sends a summary to Telegram, like your Gold Signal agent.", "build"],
+      ["c7", "Use prompt caching and structured outputs", "Cache the system prompt and journal so repeat calls are faster and cheaper; get JSON back that your code can trust.", "claude"],
     ],
-    info: [["Skip", "The complete guide to Python (Clear Code, 11h 09m) covers the same ground — keep it as a reference."],
-           ["Book", "Joel Grus, Data Science from Scratch — Python and visualization chapters."]],
-    gate: ["p1g", "A year of XAUUSD 15-min candles from MT5 loaded in pandas, with the average range of the Asia, London and NY sessions. → First piece of the Observer."] },
+    learn: [
+      ["p1b", "Python for Data Science", "freeCodeCamp · 12h 20m · the core Python course", "video"],
+      ["p1c", "Data Analysis with Python: NumPy, Pandas, Data Visualization", "freeCodeCamp · 9h 56m · for handling the trade data", "video"],
+      ["p1k", "Data Science from Scratch — Joel Grus", "Your book #1. Python and visualization chapters.", "book"],
+      ["a1l1", "Building Effective Agents — Anthropic", "Engineering blog post. The best 30 minutes you can spend on agent design. Read it twice.", "read"],
+      ["a1l2", "Building with the Claude API — Anthropic Academy", "Free course at anthropic.skilljar.com.", "course"],
+      ["a1l3", "Prompt engineering interactive tutorial — Anthropic", "Free, on GitHub (anthropics/courses).", "course"],
+      ["p5b", "Essential Skills for Becoming an AI Engineer: RAG, AI Agents, & More", "IBM Technology · for the AI summary", "video"],
+      ["a1l4", "How AI Agents Actually Work (Every Piece Explained & Built)", "Tech With Tim · 19m · add it to your playlist", "video"],
+      ["c5", "Prompt engineering guide — Claude docs", "docs.claude.com · clear instructions, examples, XML tags, letting Claude think. Keep it open while you write prompts.", "read"],
+      ["c6", "API Fundamentals + Real World Prompting — Anthropic courses", "Free notebooks on GitHub (anthropics/courses), next to the prompt engineering tutorial.", "course"],
+    ],
+    gate: ["p5g", "Every closed MT5 trade lands in your journal with no manual typing for 2 straight weeks, plus an AI weekly summary — and the agent uses at least two tools to correctly answer 10 questions about your trades. → Journal module v1."] },
 
-  { id: "p2", title: "Statistics and math for trading", weeks: "Weeks 6–8", key: true,
-    intro: "The most important phase: statistics is how you prove an edge is real and not luck.",
-    items: [
-      ["p2a", "Statistics: A Full Lecture to Learn Data Science", "numiqo · 4h 55m"],
-      ["p2b", "Everything About Calculus Explained Slowly", "Bub Explains · 2h 13m · light, for intuition"],
-      ["p2c", "Optional: Introduction to Mathematical Thinking", "Nerd's Lesson · 11h 28m · useful later for Bishop"],
+  { id: "m3", title: "Formalise your edge", when: "Weeks 2–5", target: "2026-11-12", key: "Flagship",
+    intro: "Write your price action as rules so precise that two people (or a computer) would always agree on the same chart. Worth more than any course.",
+    build: [
+      ["pf1", "Write the break of structure (BOS) definition", "Swing point, lookback, what confirms the break. No room for interpretation.", "build"],
+      ["pf2", "Write POI, invalidation, entry, stop, target and session rules", "Same standard: unambiguous.", "build"],
+      ["p3d", "Clean your candle data", "Gaps, bad ticks, timezones, session boundaries. Save as Parquet files.", "build"],
+      ["pf3", "Code the rules and label 2+ years of XAUUSD", "The machine marks every BOS and POI it finds.", "build"],
+      ["pf4", "Compare the machine's labels with yours on 50 charts", "Where you disagree, either the rule is incomplete or your judgment adds something. Finding out which is the whole game.", "build"],
+      ["c11", "Write a CLAUDE.md for your trading repo", "Your project rules, BOS definitions and test commands. Claude Code reads it at the start of every session.", "claude"],
+      ["c12", "Plan first, then build", "Have Claude Code plan the labelling code in plan mode; review and fix the plan before it writes a line.", "claude"],
     ],
-    info: [["Focus on", "Distributions, expected value, variance, sample size, confidence intervals, hypothesis tests, correlation."],
-           ["Book", "Grus — statistics and probability chapters."]],
-    gate: ["p2g", "Win rate, average R and expectancy with a confidence interval on your trade log — and H-01 (invalid BOS → losses) tested with real numbers."] },
+    learn: [
+      ["p1e", "Claude Code for Beginners", "freeCodeCamp · 4h 28m · so Claude does the heavy typing", "video"],
+      ["p5d", "900+ Hours of Learning Claude Code/Cursor in 10 Minutes", "Andrew Codesmith · 10m", "video"],
+      ["p1h", "Testing with pytest + clean project folders", "Separate data / signals / risk / execution code. A silent bug looks exactly like profit. Any beginner pytest tutorial.", "video"],
+      ["c8", "Claude Code: Best practices for agentic coding — Anthropic Engineering", "The official playbook for working with Claude Code.", "read"],
+      ["c9", "Claude Code: A Highly Agentic Coding Assistant — DeepLearning.AI × Anthropic", "Free short course · explore, build, test and debug real projects with Claude Code.", "course"],
+      ["c10", "Claude Code docs: settings, CLAUDE.md, slash commands, hooks", "docs.claude.com · reference when you want Claude Code to work your way.", "read"],
+    ],
+    gate: ["pfg", "A written, versioned rulebook plus code that reproduces at least 80% of your own BOS/POI calls, and a list of the cases where your judgment beats the rules."] },
 
-  { id: "p3", title: "Algorithmic trading and backtesting", weeks: "Weeks 9–11",
-    intro: "Turn your price-action rules into code and test them on history — the bridge between your trading and the AI system.",
-    items: [
-      ["p3a", "Algorithmic Trading Python for Beginners", "QuantProgram · 3h 01m"],
-      ["p3b", "Python Algorithmic Trading Course: Massive, SnapTrade & Alpaca", "freeCodeCamp · 1h 44m · Alpaca isn't MT5: learn the pattern, then use the MetaTrader5 Python package"],
-      ["p3c", "How I Built My Own AI Trading Assistant Using Claude Cowork", "Alex Carter · 12m"],
+  { id: "m4", title: "Is your edge real?", when: "Weeks 4–6", target: "2026-11-19", key: "Most important",
+    intro: "Statistics is how you tell edge from luck. Your trade log is a sample; this milestone tells you what it actually proves.",
+    build: [
+      ["m4a", "Compute your core stats", "Win rate, average R, expectancy, t-statistic and a confidence interval on your edge.", "build"],
+      ["m4b", "Test H-01 with real numbers", "Do invalid BOS calls really drive your losses?", "build"],
+      ["m4c", "Monte Carlo your equity curve", "Shuffle your trades 10,000 times to see the drawdowns you could have had.", "build"],
+      ["c13", "Run your stats in Claude chat and check them", "Upload your trade log, let Claude's code execution do the analysis, then compare with your own Python results. Never trust one source.", "claude"],
+      ["c14", "Ask for an Artifact dashboard of your edge", "An interactive chart of win rate, R and drawdowns you can revisit and share.", "claude"],
     ],
-    info: [["Focus on", "The backtest loop, spread and slippage costs, look-ahead bias, walk-forward testing, max drawdown, Sharpe ratio."],
-           ["Book", "Stefan Jansen, Machine Learning for Algorithmic Trading — opening chapters."]],
-    gate: ["p3g", "One rule (e.g. BOS + POI entry) runs as code on 2+ years of XAUUSD with spread, compared with your manual results. → Seed of the Executor."] },
+    learn: [
+      ["p2a", "Statistics: A Full Lecture to Learn Data Science", "numiqo · 4h 55m", "video"],
+      ["p2j", "Data Science from Scratch — Grus, statistics and probability chapters", "Continue your book #1.", "book"],
+      ["p2k", "Think Stats — Allen Downey", "Free. Statistics through Python; use it where Grus moves too fast.", "book"],
+    ],
+    info: [["Watch for", "Multiple testing: try 200 variants and ~10 will look brilliant by pure chance."]],
+    gate: ["p2g", "A one-page answer: is your edge statistically real, how many more trades until you'd know for sure, and what's the worst drawdown you should expect?"] },
 
-  { id: "p4", title: "Machine learning for the Pattern Learner", weeks: "Weeks 12–17",
-    intro: "The longest phase and the one your playlist covers least, so the books carry more weight here.",
-    items: [
-      ["p4a", "Everything About Machine Learning Explained Slowly", "Cosmo Explains · 2h 07m"],
-      ["p4b", "Steal My Machine Learning Project Template", "Marina Wyss · 24m"],
-      ["p4c", "Introduction to Tensors", "11m · only right before any deep learning"],
-      ["p4d", "Add a hands-on scikit-learn course to the playlist", "Gap to fill"],
+  { id: "a2", title: "Agent design patterns", when: "Weeks 4–7", target: "2026-11-26",
+    intro: "Most good \"agents\" are really workflows: fixed steps where the model does the thinking. Learn when to use which, and the five patterns that cover most real systems.",
+    build: [
+      ["a2a", "Prompt chain: news → summary → impact on gold", "Each step's output feeds the next.", "build"],
+      ["a2b", "Router: send each question to the right specialist", "A stats question, a chart question and a general question each get their own prompt.", "build"],
+      ["a2c", "Evaluator-optimizer: an agent that critiques its own report", "It drafts your daily report, grades it against a checklist, and rewrites it.", "build"],
+      ["a2d", "Write down: workflow or agent?", "One paragraph per project on why. This judgment is what clients pay for.", "do"],
+      ["c18", "Test extended thinking on your hardest prompt", "Compare answers with and without it; note the difference in quality, speed and cost.", "claude"],
     ],
-    info: [["Focus on", "Train/test splits, overfitting, cross-validation for time series, features from candles, classification models."],
-           ["Book", "Jansen — ML chapters; López de Prado, Advances in Financial Machine Learning — backtest overfitting."]],
-    gate: ["p4g", "A model trained in Colab labels past setups as valid/invalid BOS, tested walk-forward, beating a random baseline on unseen data. → Pattern Learner v1."] },
+    learn: [
+      ["a2l1", "Agentic AI — Andrew Ng (DeepLearning.AI)", "~10h · free to watch · reflection, tool use, planning, multi-agent — built in plain Python.", "course"],
+      ["a2l2", "Hugging Face AI Agents Course — Units 1–2", "Free · agent basics and the main frameworks (smolagents, LlamaIndex, LangGraph).", "course"],
+      ["a2l3", "A Practical Guide to Building Agents — OpenAI", "Free PDF. A second, vendor-neutral view of the same design ideas.", "read"],
+      ["c15", "Effective context engineering for AI agents — Anthropic Engineering", "What to put in the model's context, and what to leave out.", "read"],
+      ["c16", "Writing effective tools for agents — Anthropic Engineering", "How to design tools Claude uses well.", "read"],
+      ["c20", "Claude cookbooks — Anthropic (GitHub)", "Ready-made code recipes (anthropics/claude-cookbooks). Check for one before writing from scratch.", "read"],
+    ],
+    gate: ["a2g", "Three working patterns on real trading tasks, each with a written note on why it's a workflow or an agent."] },
 
-  { id: "p5", title: "AI agents and AI engineering", weeks: "Weeks 18–21",
-    intro: "Agents are the glue: they watch, log, explain and alert, while your rules and the Pattern Learner make the trading decisions.",
-    items: [
-      ["p5a", "How I'd Learn AI Engineering in 2026 (Complete Roadmap)", "Dave Ebbelaar · 19m"],
-      ["p5b", "Essential Skills for Becoming an AI Engineer: RAG, AI Agents, & More", "IBM Technology"],
-      ["p5c", "Claude's Creator Just Told Us How to Actually Use Claude in 2026", "AI Edge · 21m"],
-      ["p5d", "900+ Hours of Learning Claude Code/Cursor in 10 Minutes", "Andrew Codesmith · 10m"],
-      ["p5e", "How to Build an AI Agent Team for Automated Workflows", "AI Master · 10m"],
-      ["p5f", "The Multi-Agent Architecture That Actually Ships", "AI Engineer · 19m"],
-      ["p5g2", "Build & Sell with Claude Code", "Nate Herk · 10h · sub-agents, skills, agent teams chapters"],
-      ["p5h", "Optional: $75M Founder Reveals His Agentic Engineering Setup", "David Ondrej · 52m"],
-      ["p5i", "Optional: Build an Agentic Software Factory: Deep Dive", "Steve (Builder.io) · 18m"],
+  { id: "m5", title: "Honest backtest", when: "Weeks 5–8", target: "2026-12-03",
+    intro: "Run your coded rules on history without fooling yourself. Most amateur backtests are quietly invalid.",
+    build: [
+      ["p3e", "Build an event-driven backtester", "Bar by bar, order by order, as reality delivered it. Slower than vectorised, but honest.", "build"],
+      ["m5a", "Run your rules on 2+ years with real costs", "Spread, commission and swap included.", "build"],
+      ["m5b", "Walk-forward test", "Tune on one window, test on the next untouched one, roll forward.", "build"],
+      ["m5c", "Stress test at 2x costs", "A strategy that survives double costs is a real strategy.", "build"],
+      ["m5d", "Use back-adjusted continuous futures data", "Contract rolls show up as fake price jumps on the chart. Back-adjusted data smooths them out so your backtest isn't fooled.", "build"],
+      ["c19", "Hooks: auto-run your tests after every edit", "A Claude Code hook that runs pytest whenever Claude changes backtest code, so bugs can't slip in quietly.", "claude"],
     ],
-    info: [["Focus on", "Tool calling, RAG (AI searching your own data before answering), agent loops, guardrails, logging."]],
-    gate: ["p5g", "An agent logs each closed MT5 trade and answers questions like “show my losing trades with a misread BOS this month.” → Journal + Analyst."] },
+    learn: [
+      ["p3a", "Algorithmic Trading Python for Beginners", "QuantProgram · 3h 01m", "video"],
+      ["p3b", "Python Algorithmic Trading Course: Massive, SnapTrade & Alpaca", "freeCodeCamp · 1h 44m · Alpaca isn't MT5: learn the pattern, swap in MetaTrader5", "video"],
+      ["p3k", "Systematic Trading — Robert Carver", "The most practical book for moving from discretionary to systematic.", "book"],
+    ],
+    info: [["Bias killers", "Look-ahead bias, survivorship bias, point-in-time data. Be able to name and defend against all three."]],
+    gate: ["p3g", "Your rules backtested event-driven on 2+ years with costs, walk-forward tested, and still profitable at 2x costs."] },
 
-  { id: "p6", title: "Systems, databases and scale", weeks: "Weeks 22–24",
-    intro: "Turn separate scripts into one system that runs many accounts and brokers reliably.",
-    items: [
-      ["p6a", "System Design Course: APIs, Databases, Caching, CDNs, Load Balancing", "freeCodeCamp · 2h 05m · Hayk Simonyan's version is the same topics — watch one"],
-      ["p6b", "SQL for Data Analytics: Intermediate Course + Project", "6h 26m"],
-      ["p6c", "The Future of Computer Science", "Lattice · 9m"],
+  { id: "a3", title: "Claude Code, MCP and skills", when: "Weeks 6–9", target: "2026-12-10",
+    intro: "MCP (Model Context Protocol) is the standard way to plug your own data and tools into any AI app. Skills and sub-agents make Claude Code work your way.",
+    build: [
+      ["a3a", "Build an MCP server for your trading data", "Read-only: journal, candles, stats. Claude can query them; it can never place orders.", "build"],
+      ["a3b", "Create a Claude Code skill for your backtests", "One command that runs a backtest and writes the report.", "build"],
+      ["a3c", "Set up a sub-agent reviewer", "It checks every code change for look-ahead bias before you accept it.", "build"],
+      ["c26", "Add connectors in the Claude app", "Link Google Drive or Calendar, and your own MCP server, to Claude chat.", "claude"],
+      ["c27", "Make a skill in the Claude app", "For example, your weekly review format, so Claude does it the same way every time.", "claude"],
     ],
-    info: [["Reference only", "SQL Full Course for Beginners (30h) — look things up when stuck."],
-           ["After this", "Christopher Bishop, Pattern Recognition and Machine Learning — the bridge to your master's and PhD."]],
-    gate: ["p6g", "Candles and journal live in a database, and you can draw how the five modules connect across brokers and accounts."] },
+    learn: [
+      ["a3l1", "Introduction to Model Context Protocol — Anthropic Academy", "Free.", "course"],
+      ["a3l2", "Claude Code in Action — Anthropic Academy", "Free.", "course"],
+      ["a3l3", "Introduction to agent skills — Anthropic Academy", "Free.", "course"],
+      ["p5g2", "Build & Sell with Claude Code", "Nate Herk · 10h · sub-agents, skills and agent-teams chapters", "video"],
+      ["a3l4", "Model Context Protocol documentation", "modelcontextprotocol.io · reference while building your server.", "read"],
+      ["c21", "Agent Skills with Anthropic — DeepLearning.AI", "Free to watch · 2h 19m · skills that work across the Claude app, Claude Code, the API and the Agent SDK.", "course"],
+      ["c22", "MCP: Build Rich-Context AI Apps with Anthropic — DeepLearning.AI", "Free · ~1.5h.", "course"],
+      ["c23", "Equipping agents for the real world with Agent Skills — Anthropic Engineering", "Why skills work the way they do.", "read"],
+      ["c25", "Model Context Protocol: Advanced Topics — Anthropic Academy", "Free · after the intro course.", "course"],
+    ],
+    gate: ["a3g", "Claude answers \"how did my London-session trades do this month?\" by calling your own MCP server."] },
+
+  { id: "m6", title: "Automated on demo", when: "Weeks 8–10", target: "2026-12-20",
+    intro: "The system trades by itself on a demo account. This is your AI hedge fund's first working version. Start the 30-day demo run as soon as it works.",
+    build: [
+      ["m6a", "Executor: place orders on an MT5 demo from your coded rules", "Plain code, never an AI.", "build"],
+      ["pr1", "Position sizing: fractional Kelly", "Derive your risk-per-trade numbers instead of choosing them.", "build"],
+      ["pr2", "Volatility targeting and hard drawdown limits", "Risk stays steady as markets calm down or get wild.", "build"],
+      ["m6c", "Handle the futures roll in the Executor", "MNQ rolls on the second Thursday of Mar/Jun/Sep/Dec (8 days before expiry on the third Friday). Gold (MGC) runs on its own schedule, so check CME's calendar. Close, reopen on the next contract, update the symbol, and re-check stops after the price gap.", "build"],
+      ["p6d", "Live safety", "Position reconciliation (does the broker agree with you?), heartbeat checks, kill switch, alerts.", "build"],
+      ["m6b", "Observer: Telegram alert when a setup forms", "Upgrade your Gold Signal agent to use your coded rules.", "build"],
+      ["c28", "Run Claude Code from a script (headless mode)", "For example, a nightly job that runs your backtests and writes a report while you sleep. It builds and checks; it never trades.", "claude"],
+    ],
+    learn: [
+      ["p3c", "How I Built My Own AI Trading Assistant Using Claude Cowork", "Alex Carter · 12m", "video"],
+      ["prk", "Advanced Futures Trading Strategies — Robert Carver", "Risk and sizing chapters.", "book"],
+      ["p6a", "System Design Course: APIs, Databases, Caching, Load Balancing", "freeCodeCamp · 2h 05m", "video"],
+      ["c29", "Effective harnesses for long-running agents — Anthropic Engineering", "How to keep long, unattended agent jobs on track.", "read"],
+    ],
+    info: [["Agent design", "Milestone 7 (MCP and skills) comes just before this, and the multi-agent research desk (milestone 9) right after it."]],
+    gate: ["p6g", "The full pipeline (data → signal → risk sizing → order → journal) runs unattended on demo, and its 30-day clean run has started."] },
+
+  { id: "a4", title: "Multi-agent research desk", when: "Weeks 10–13", target: "2027-01-07",
+    intro: "Several specialist agents coordinated by an orchestrator. Powerful, and easy to over-build: add an agent only when one can't do the job well.",
+    build: [
+      ["a4a", "Pre-session research desk", "An orchestrator plus news, chart and risk-check agents that brief you before London open. Becomes your Observer + Analyst.", "build"],
+      ["a4b", "Shared memory and handoffs", "Agents pass structured notes (JSON), not loose chat, and every step is logged.", "build"],
+      ["a4c", "Guardrails and human sign-off", "Each agent gets only the tools it needs. Anything touching money needs you.", "build"],
+      ["a4d", "Rebuild it with the Claude Agent SDK", "Python: pip install claude-agent-sdk. The same harness that powers Claude Code.", "build"],
+      ["c32", "Benchmark your desk against Claude's Research", "Run a Research report on what's moving gold this week and compare it with your desk's briefing.", "claude"],
+      ["c33", "Try Claude in Chrome for browsing tasks", "For example, gathering the economic calendar. Watch what it does and approve each step.", "claude"],
+    ],
+    learn: [
+      ["p5e", "How to Build an AI Agent Team for Automated Workflows", "AI Master · 10m", "video"],
+      ["p5f", "The Multi-Agent Architecture That Actually Ships", "AI Engineer · 19m", "video"],
+      ["a4l1", "Claude Agent SDK documentation", "docs.claude.com · reference while building.", "read"],
+      ["a4l2", "$75M Founder Reveals His Agentic Engineering Setup", "David Ondrej · 52m", "video"],
+      ["a4l3", "Build an Agentic Software Factory: Deep Dive", "Steve (Builder.io) · 18m", "video"],
+      ["c30", "How we built our multi-agent research system — Anthropic Engineering", "How Anthropic built Claude's own Research feature with multiple agents.", "read"],
+    ],
+    gate: ["a4g", "The research desk delivers a useful briefing before 5 sessions in a row, with every agent's work logged."] },
+
+  { id: "m7", title: "Small real capital + tear sheet", when: "Weeks 11–15", target: "2027-01-24",
+    intro: "Go live small, measure everything, and produce the report an investor would ask for.",
+    build: [
+      ["m7c", "Finish 30 clean days on demo", "Zero manual fixes. This is market time, so it doesn't compress — build the other pieces while it runs.", "do"],
+      ["m7a", "Move the Executor to small real capital", "Only after the 30 clean demo days. A size you can afford to lose.", "do"],
+      ["m7b", "Move candles and journal into a SQL database", "One source of truth for every module.", "build"],
+      ["pr3", "Stress test: March 2020 and a gold limit-up day", "What would your system have done?", "build"],
+      ["pr4", "Performance metrics, including deflated Sharpe", "Sharpe, Sortino, Calmar, max drawdown, time to recover — adjusted for how many variants you tried.", "build"],
+      ["c34", "Turn your tear sheet into a polished file with Claude", "Have Claude create the PDF or spreadsheet version, then check every number against your code.", "claude"],
+    ],
+    learn: [
+      ["p6b", "SQL for Data Analytics: Intermediate Course + Project", "6h 26m", "video"],
+    ],
+    gate: ["prg", "A first tear sheet: monthly returns, drawdown chart, key metrics, and one paragraph on who loses this money to you and why."] },
+
+  { id: "a5", title: "Production-grade agents", when: "Weeks 13–16", target: "2027-01-28",
+    intro: "The difference between a demo and something a client pays for: you can prove it works, see what it did, know what it costs, and it fails safely.",
+    build: [
+      ["a5a", "Build an eval set", "30 real questions with correct answers for your Journal/Analyst agent, scored automatically after every change.", "build"],
+      ["a5b", "Tracing and cost tracking", "Log every step, tool call and token, and the cost of each run.", "build"],
+      ["a5c", "Prompt-injection test", "Feed your news agent a malicious article and make sure it can't be hijacked.", "build"],
+      ["a5d", "Failure handling", "Retries, timeouts, a fallback model, and an alert when something breaks.", "build"],
+      ["c38", "Run your evals with the Batch API", "Big test runs at a lower price when you don't need answers instantly.", "claude"],
+      ["c39", "Track usage and cost in the Claude Console", "Know what each agent costs per day before a client asks.", "claude"],
+    ],
+    learn: [
+      ["a5l1", "AI Engineering — Chip Huyen", "The evaluation and agents chapters. The standard book on building real AI products.", "book"],
+      ["a5l2", "Your AI Product Needs Evals — Hamel Husain", "Blog post. Why evals are the core skill, and how to start.", "read"],
+      ["a5l3", "Hugging Face Agents Course — observability & evaluation unit", "Free bonus unit.", "course"],
+      ["c35", "Demystifying evals for AI agents — Anthropic Engineering", "", "read"],
+      ["c36", "Prompt Evaluations — Anthropic courses (GitHub)", "Free notebooks on building evals for Claude.", "course"],
+      ["c37", "Introducing advanced tool use — Anthropic Engineering", "Newer tool-use features for bigger, more efficient agents.", "read"],
+      ["c24", "Code execution with MCP — Anthropic Engineering", "Making agents with many tools cheaper and faster.", "read"],
+    ],
+    gate: ["a5g", "Your agents pass at least 90% of the eval set, every run is traced, and you know the cost per run."] },
+
+  { id: "a6", title: "Launch the agency", when: "Weeks 12–22", target: "2027-03-14",
+    intro: "Sell outcomes, not \"AI\". One niche, one painful problem, one fixed-price offer — then deliver it so well the case study sells the next client.",
+    build: [
+      ["a6a", "Pick one niche and one painful problem", "Ideas: prop-firm traders, oil & gas service companies (your Halliburton background), or local Guyanese businesses.", "do"],
+      ["a6b", "Package one productized offer", "Fixed scope, fixed price, clear result.", "do"],
+      ["a6c", "Build 2 portfolio demos", "Your trading journal agent counts as one.", "build"],
+      ["a6d", "Delivery SOP and client onboarding checklist", "So every project runs the same way.", "build"],
+      ["a6e", "Land your first paying client (or a paid pilot)", "", "do"],
+      ["a6f", "Write a case study with real numbers", "Hours saved, money made, errors cut.", "do"],
+      ["c40", "Make your offer page, proposal and pitch deck with Claude", "Artifacts, documents, slides, and Claude Design for mockups.", "claude"],
+    ],
+    learn: [
+      ["a6l1", "How To Build A $100K/Month AI Agency (Full 5+ Hour Course)", "Tim Chao · 5h 27m", "video"],
+      ["a6l2", "Start a One Person Business with Claude (5 Hour Course 2026)", "Ritesh Verma · 4h 29m", "video"],
+      ["a6l3", "How I'd Start a 1-Person AI Business with Claude AI in 30 Days", "Ritesh Verma · 14m", "video"],
+      ["a6l4", "57 Minutes of AI Training That Will Explode Your Business in 2026", "Michele Torti · 58m", "video"],
+      ["a6l5", "I Quit Selling This… Here's My Agency Course (2026)", "Owen Rensland · 20h · the AI systems section only", "video"],
+      ["a6l6", "$100M Offers — Alex Hormozi", "How to build an offer people feel stupid saying no to.", "book"],
+    ],
+    gate: ["a6g", "One paying client delivered, with a case study you can show the next prospect."] },
+
+  { id: "m8", title: "ML layer: meta-labelling", when: "Weeks 16–28", target: "2027-04-22",
+    intro: "Your rules pick the direction; ML only decides whether to take the trade and how big. Validation matters more than the model.",
+    build: [
+      ["p4d", "Practise scikit-learn and gradient boosting (XGBoost / LightGBM)", "Boosted trees beat deep learning on this kind of data.", "build"],
+      ["m8a", "Label past signals with the triple-barrier method", "Which hit first: target, stop or time limit?", "build"],
+      ["m8b", "Train a meta-labelling model with purged cross-validation", "Normal k-fold leaks the future into training on price data.", "build"],
+      ["c42", "Make Claude your study partner for López de Prado", "Ask it to explain each chapter, quiz you, and review your purged-CV code. Check its claims against the book.", "claude"],
+    ],
+    learn: [
+      ["p4a", "Everything About Machine Learning Explained Slowly", "Cosmo Explains · 2h 07m · intuition first", "video"],
+      ["p4k", "An Introduction to Statistical Learning (ISLR)", "Free. The best value-per-hour ML book.", "book"],
+      ["p4b", "Steal My Machine Learning Project Template", "Marina Wyss · 24m", "video"],
+      ["p4l", "Advances in Financial Machine Learning — López de Prado", "Purged CV, triple-barrier, meta-labelling. Hard and essential.", "book"],
+      ["p4j", "Machine Learning for Algorithmic Trading — Stefan Jansen", "Your book #2. After ISLR.", "book"],
+    ],
+    gate: ["p4g", "Write your expected out-of-sample Sharpe before looking at the test set, then compare. The model improves results on data it never saw. → Pattern Learner v1."] },
+
+  { id: "a7", title: "Structure and scale the agency", when: "Weeks 22–33", target: "2027-05-30",
+    intro: "Turn freelancing into a business: recurring revenue, documented systems, and agents that run your own back office.",
+    build: [
+      ["a7a", "Agency operating system", "CRM, proposal template, contracts (reviewed by a lawyer), invoicing.", "build"],
+      ["a7b", "Agents that run your agency", "Lead research, proposal drafts, client onboarding and monthly client reports.", "build"],
+      ["a7c", "Retainer pricing and maintenance plans", "Recurring monthly revenue instead of one-off builds.", "do"],
+      ["a7d", "Bring on your first contractor", "With SOPs, so the work doesn't live only in your head.", "do"],
+      ["c43", "Host client agents with Claude Managed Agents or the Agent SDK", "Pick based on how much infrastructure you want to run yourself.", "claude"],
+      ["c44", "Move the agency onto a Claude Team plan", "Shared Projects and admin controls for you and your contractors.", "claude"],
+    ],
+    learn: [
+      ["a7l1", "Built to Sell — John Warrillow", "How to productize a service business.", "book"],
+      ["a7l2", "The E-Myth Revisited — Michael Gerber", "Work on the business, not just in it.", "book"],
+      ["a7l3", "$100M Leads — Alex Hormozi", "How to get a steady flow of clients.", "book"],
+      ["a7l4", "Microsoft Foundry — AI app & agent factory", "Microsoft Mechanics · 12m · bigger clients often run on Azure", "video"],
+      ["c45", "Claude with Amazon Bedrock / Google Cloud Vertex AI — Anthropic Academy", "Free · bigger clients often run Claude through their cloud provider.", "course"],
+    ],
+    gate: ["a7g", "3 clients on monthly retainers, delivery runs on written SOPs, and your internal agents save you at least 5 hours a week."] },
 ];
 
-// ---------- 2. Saving ticks on this device ----------
+// Deeper study, ~3 hrs/week, never blocking the build.
+const EXPERTISE = [
+  ["p1a", "The Data Movie: Data Literacy Explained Visually", "Data with Baraa · 1h 56m · big picture · Oct", "video"],
+  ["p2b", "Everything About Calculus Explained Slowly", "Bub Explains · 2h 13m · late Oct", "video"],
+  ["p2l", "Essence of Linear Algebra — 3Blue1Brown", "Free YouTube series · ~3h · Nov · add it to your playlist", "video"],
+  ["p4m", "Mathematics for Machine Learning — Deisenroth et al.", "Free · Ch. 2, 5, 6 (linear algebra, vector calculus, probability) · Dec–Feb", "book"],
+  ["p4b1", "Pattern Recognition and Machine Learning — Bishop, Ch. 1", "Your book #3 begins · free PDF from Microsoft Research · ~Feb 2027", "book"],
+  ["p4b2", "Bishop, Ch. 3–4: linear models for regression and classification", "Alongside Milestone 8 · Feb–Apr 2027", "book"],
+  ["fy5", "Bishop, Ch. 14 and 13", "Combining models (ties into boosting) and hidden Markov models (market regimes) · after Milestone 8", "book"],
+];
+
+// Parallel track toward a fundable track record.
+const FUND = [
+  { title: "Keep going all year", items: [
+    ["fa2", "Keep the Hypothesis Register forever", "Including every failed idea. A record of what didn't work proves you have a process.", "do"],
+    ["fa3", "Learn CME gold and Nasdaq futures (GC, MGC, NQ, MNQ)", "Contract specs, margin, rolls. Investors value futures records far more than CFD records.", "do"],
+  ]},
+  { title: "One business book every 45 days", items: [
+    ["fb1", "Inside the Black Box — Rishi Narang", "How quant funds actually work.", "book"],
+    ["fb2", "So You Want to Start a Hedge Fund — Ted Seides", "An investor's view of why new managers fail.", "book"],
+    ["fb3", "Hedge Fund Market Wizards — Jack Schwager", "", "book"],
+    ["fb4", "More Money Than God — Sebastian Mallaby", "How the great funds scaled.", "book"],
+  ]},
+  { title: "Review every 45 days (a compressed quarter)", items: [
+    ["fq1", "Review 1 · Nov 26", "What did you build, what did you learn, is the pace sustainable?", "do"],
+    ["fq2", "Review 2 · Jan 10", "", "do"],
+    ["fq3", "Review 3 · Feb 24", "", "do"],
+    ["fq4", "Review 4 · Apr 10 + Year 1 gate", "Is your edge statistically real, and does the system run automatically?", "do"],
+  ]},
+  { title: "Year 2–3 preview", items: [
+    ["fy1", "Second strategy with low correlation to the first", "Different instrument, timeframe or mechanism.", "do"],
+    ["fy2", "Study for Series 3 (or your jurisdiction's equivalent)", "Needed to manage others' money in futures.", "do"],
+    ["fy3", "Meet fund lawyers, administrators and other new managers", "This industry runs on introductions.", "do"],
+    ["fy4", "Written fund business plan, reviewed by a fund lawyer", "Structure, costs, break-even AUM, investor profile.", "do"],
+  ]},
+];
+
+// ---------- 2. Tracks and saving ----------
+const TRACKS = [{ list: MILESTONES, el: "plan", num: i => `${i + 1}` }];
+const ALL = MILESTONES;
+const trackOf = m => TRACKS.find(t => t.list.includes(m));
+const numOf = m => { const t = trackOf(m); return t.num(t.list.indexOf(m)); };
+
 const KEY = "aiFundRoadmap.v1";
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
 function save(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
 let state = load();
-let openPhases = state._open || ["p0"];
+state._passed = state._passed || {};   // gate id -> date you passed it
+state._rewards = state._rewards || {}; // milestone id -> {r: reward, b: bonus reward}
+let openPhases = (state._open || []).filter(id => ALL.some(m => m.id === id));
+if (!openPhases.length) openPhases = ["m1"];
 
-// ---------- 3. Drawing the page ----------
-const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+// ---------- 3. Dates, XP and levels ----------
+const pad = n => String(n).padStart(2, "0");
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
+const dayNum = s => Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10)) / 864e5;
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const nice = s => `${MONTHS[+s.slice(5, 7) - 1]} ${+s.slice(8, 10)}`;
+const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
 
-function itemHTML(id, title, meta, isGate) {
-  return `<label class="item${isGate ? " gate" : ""}">
+function earlyDays(m) {
+  const p = state._passed[m.gate[0]];
+  if (!state[m.gate[0]] || !p) return null;
+  return dayNum(m.target) - dayNum(p);
+}
+const speedBonus = m => { const e = earlyDays(m); return e && e > 0 ? Math.min(200, e * 5) : 0; };
+
+const LEVELS = [[0, "Rookie"], [100, "Apprentice Quant"], [250, "Data Wrangler"], [450, "Rule Writer"],
+  [700, "Quant Builder"], [1000, "Agent Architect"], [1400, "Systems Trader"], [1900, "Fund Architect"],
+  [2500, "Agency Founder"], [3200, "Fund Manager"]];
+
+function totalXP() {
+  let xp = 0;
+  ALL.forEach(m => {
+    xp += m.build.filter(it => state[it[0]]).length * 10;
+    xp += m.learn.filter(it => state[it[0]]).length * 5;
+    if (state[m.gate[0]]) xp += 50 + speedBonus(m);
+  });
+  xp += EXPERTISE.filter(it => state[it[0]]).length * 5;
+  FUND.forEach(g => xp += g.items.filter(it => state[it[0]]).length * 10);
+  return xp;
+}
+function levelOf(xp) {
+  let i = 0;
+  LEVELS.forEach((l, j) => { if (xp >= l[0]) i = j; });
+  return i;
+}
+
+// ---------- 4. Drawing the page ----------
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const idsOf = m => m.build.concat(m.learn).map(it => it[0]).concat(m.gate[0]);
+
+// Claude mastery: new Claude items use ids c1, c2, ...; these earlier items are Claude-specific too.
+const CLAUDE_EXTRA = ["p1d", "p1e", "p5c", "p5d", "p5g2", "a1a", "a1c", "a1l1", "a1l2", "a1l3",
+  "a3a", "a3b", "a3c", "a3l1", "a3l2", "a3l3", "a3l4", "a4d", "a4l1"];
+const isClaude = id => /^c\d+$/.test(id) || CLAUDE_EXTRA.includes(id);
+const CLAUDE_TIERS = [[0, "Beginner"], [0.2, "Power user"], [0.4, "Builder"], [0.6, "Expert"], [0.8, "Master"], [1, "Disgustingly exceptional"]];
+
+function itemHTML(id, title, meta, kind, isGate) {
+  return `<label class="item${isGate ? " gate" : ""}${isClaude(id) ? " isClaude" : ""}">
     <input type="checkbox" data-id="${id}" ${state[id] ? "checked" : ""}>
     <span class="box"></span>
-    <div><div class="t">${esc(title)}</div>${meta ? `<div class="m">${esc(meta)}</div>` : ""}</div>
+    <div><div class="t">${kind ? `<span class="kind">${kind}</span>` : ""}${esc(title)}</div>${meta ? `<div class="m">${esc(meta)}</div>` : ""}</div>
   </label>`;
+}
+const list = items => items.map(it => itemHTML(it[0], it[1], it[2], it[3])).join("");
+
+function rewardLine(m) {
+  const r = state._rewards[m.id] || {};
+  if (!r.r && !r.b) return "";
+  return `<p class="myreward">★ Reward: <b>${esc(r.r || "—")}</b>${r.b ? ` · Bonus if by ${nice(m.target)}: <b>${esc(r.b)}</b>` : ""}</p>`;
+}
+
+function milestoneHTML(m) {
+  return `
+    <details class="phase${m.key ? " key" : ""}" id="${m.id}" ${openPhases.includes(m.id) ? "open" : ""}>
+      <summary>
+        <div class="top">
+          <div><div class="num">Milestone ${numOf(m)}${m.key ? `<span class="tag">${m.key}</span>` : ""}</div><h2>${esc(m.title)}</h2></div>
+          <div class="weeks">${m.when}<br>Target ${nice(m.target)}</div>
+        </div>
+        <div class="count" data-count="${m.id}"></div>
+        <div class="bar"><i data-bar="${m.id}"></i></div>
+      </summary>
+      <div class="body">
+        <p>${esc(m.intro)}</p>
+        <div data-rline="${m.id}">${rewardLine(m)}</div>
+        <div class="cols">
+          <div class="col build"><h3>Build</h3>${list(m.build)}</div>
+          <div class="col learn"><h3>Learn for this</h3>${list(m.learn)}</div>
+        </div>
+        ${m.info ? `<div class="info">${m.info.map(([k, v]) => `<p><b>${k}:</b> ${esc(v)}</p>`).join("")}</div>` : ""}
+        ${itemHTML(m.gate[0], m.gate[1], "", "", true)}
+      </div>
+    </details>`;
 }
 
 function render() {
-  document.getElementById("plan").innerHTML = PHASES.map((p, i) => `
-    <details class="phase${p.key ? " key" : ""}" id="${p.id}" ${openPhases.includes(p.id) ? "open" : ""}>
-      <summary>
-        <div class="top">
-          <div><div class="num">Phase ${i}${p.key ? '<span class="tag">Most important</span>' : ""}</div><h2>${esc(p.title)}</h2></div>
-          <div class="weeks">${p.weeks}</div>
-        </div>
-        <div class="count" data-count="${p.id}"></div>
-        <div class="bar"><i data-bar="${p.id}"></i></div>
-      </summary>
-      <div class="body">
-        <p>${esc(p.intro)}</p>
-        ${p.items.map(it => itemHTML(it[0], it[1], it[2])).join("")}
-        ${p.info ? `<div class="info">${p.info.map(([k, v]) => `<p><b>${k}:</b> ${esc(v)}</p>`).join("")}</div>` : ""}
-        ${itemHTML(p.gate[0], p.gate[1], "", true)}
-      </div>
-    </details>`).join("");
+  TRACKS.forEach(t => document.getElementById(t.el).innerHTML = t.list.map(milestoneHTML).join(""));
+  document.getElementById("expItems").innerHTML = list(EXPERTISE);
+  document.getElementById("fundItems").innerHTML = FUND.map(g => `<h3>${esc(g.title)}</h3>${list(g.items)}`).join("");
+  renderRewards();
   updateProgress();
 }
 
+function statusOf(m) {
+  const passed = !!state[m.gate[0]], e = earlyDays(m);
+  const left = dayNum(m.target) - dayNum(today());
+  if (passed) {
+    if (e === null) return { text: "Passed", bonus: false };
+    if (e > 0) return { text: `${plural(e, "day")} early · +${speedBonus(m)} XP`, bonus: true };
+    if (e === 0) return { text: "On target day", bonus: true };
+    return { text: `Passed ${plural(-e, "day")} late`, bonus: false };
+  }
+  if (left >= 0) return { text: `${plural(left, "day")} left`, bonus: false };
+  return { text: `${plural(-left, "day")} past target`, bonus: false };
+}
+
+function renderRewards() {
+  let n = 0;
+  document.getElementById("rewardList").innerHTML = TRACKS.map(t =>
+    t.list.map(m => {
+      const r = state._rewards[m.id] || {}, st = statusOf(m), passed = !!state[m.gate[0]];
+      const pill = passed ? (st.bonus ? "Both unlocked ★★" : "Reward unlocked ★") : "Locked";
+      const ph = ["e.g. a nice dinner out", "e.g. a new book", "e.g. a day trip", "e.g. a new keyboard"][n++ % 4];
+      return `<div class="rw${passed ? " unlocked" : ""}">
+        <div class="rw-top"><b>${numOf(m)}. ${esc(m.title)}</b><span class="pill${passed ? (st.bonus ? " gold" : " on") : ""}">${pill}</span></div>
+        <div class="m">Target ${nice(m.target)} · ${st.text}</div>
+        <label>Reward when you pass it
+          <input data-reward="${m.id}" data-field="r" value="${esc(r.r || "")}" placeholder="${ph}">
+        </label>
+        <label>Bonus if you pass it by ${nice(m.target)}
+          <input data-reward="${m.id}" data-field="b" value="${esc(r.b || "")}" placeholder="something a bit bigger">
+        </label>
+      </div>`;
+    }).join("")).join("");
+}
+
 function updateProgress() {
-  let done = 0, total = 0;
-  PHASES.forEach(p => {
-    const ids = p.items.map(it => it[0]).concat(p.gate[0]);
+  let done = 0, total = 0, ahead = 0, early = 0;
+  ALL.forEach(m => {
+    const b = m.build.filter(it => state[it[0]]).length;
+    const l = m.learn.filter(it => state[it[0]]).length;
+    const ids = idsOf(m);
     const d = ids.filter(id => state[id]).length;
     done += d; total += ids.length;
-    document.querySelector(`[data-count="${p.id}"]`).textContent = `${d} of ${ids.length} done`;
-    document.querySelector(`[data-bar="${p.id}"]`).style.width = (d / ids.length * 100) + "%";
-    document.getElementById(p.id).classList.toggle("done", d === ids.length);
+    const st = statusOf(m), e = earlyDays(m);
+    if (e !== null) ahead += e;
+    if (e !== null && e > 0) early++;
+    document.querySelector(`[data-count="${m.id}"]`).textContent =
+      `Build ${b}/${m.build.length} · Learn ${l}/${m.learn.length} · ${st.text}`;
+    document.querySelector(`[data-bar="${m.id}"]`).style.width = (d / ids.length * 100) + "%";
+    document.getElementById(m.id).classList.toggle("done", !!state[m.gate[0]]);
   });
   const pct = Math.round(done / total * 100);
   document.getElementById("pct").textContent = pct + "%";
   document.getElementById("barAll").style.width = pct + "%";
   document.getElementById("countAll").textContent = `${done} of ${total} steps`;
+  document.getElementById("upNext").innerHTML = TRACKS.map(t => {
+    const m = t.list.find(x => !state[x.gate[0]]);
+    return m ? `Up next: <b>Milestone ${numOf(m)} · ${esc(m.title)}</b> · target ${nice(m.target)} (${statusOf(m).text})`
+             : `<b>All milestones passed.</b>`;
+  }).join("<br>");
+
+  const xp = totalXP(), li = levelOf(xp), nextL = LEVELS[li + 1];
+  document.getElementById("lvlName").innerHTML = `Level ${li + 1} · <b>${LEVELS[li][1]}</b>`;
+  document.getElementById("lvlXp").textContent = `${xp} XP`;
+  document.getElementById("lvlNext").textContent = nextL ? `${nextL[0] - xp} XP to Level ${li + 2} · ${nextL[1]}` : "Max level reached";
+  document.getElementById("lvlBar").style.width = nextL ? ((xp - LEVELS[li][0]) / (nextL[0] - LEVELS[li][0]) * 100) + "%" : "100%";
+  const cIds = ALL.flatMap(m => m.build.concat(m.learn).map(it => it[0])).filter(isClaude);
+  const cDone = cIds.filter(id => state[id]).length, cShare = cDone / cIds.length;
+  let tier = CLAUDE_TIERS[0][1];
+  CLAUDE_TIERS.forEach(([t, name]) => { if (cShare >= t) tier = name; });
+  document.getElementById("clName").innerHTML = `Claude mastery · <b>${tier}</b>`;
+  document.getElementById("clCount").textContent = `${cDone} of ${cIds.length}`;
+  document.getElementById("clBar").style.width = (cShare * 100) + "%";
+
+  document.getElementById("aheadLine").innerHTML = ahead > 0
+    ? `Ahead of schedule: <b>${plural(ahead, "day")}</b> across ${plural(early, "early milestone")}`
+    : (ahead < 0 ? `Behind schedule by ${plural(-ahead, "day")}. Beat the next target to win it back.` : `Beat a target date to earn speed bonus XP.`);
 }
 
-// ---------- 4. Reacting to taps ----------
-document.getElementById("plan").addEventListener("change", e => {
-  const id = e.target.dataset.id;
-  if (!id) return;
-  state[id] = e.target.checked;
-  save(state);
-  updateProgress();
-});
-
-document.getElementById("plan").addEventListener("toggle", e => {
-  openPhases = PHASES.filter(p => document.getElementById(p.id).open).map(p => p.id);
-  state._open = openPhases;
-  save(state);
-}, true);
-
-document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
-  document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b));
-  ["plan", "rules", "parked"].forEach(t => document.getElementById(t).classList.toggle("hidden", t !== b.dataset.tab));
-});
-
-function toast(msg) {
+// ---------- 5. Celebrations ----------
+function toast(msg, ms) {
   const t = document.getElementById("toast");
   t.textContent = msg; t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 1800);
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => t.classList.remove("show"), ms || 1800);
+}
+function confetti() {
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const box = document.createElement("div");
+  box.className = "confetti";
+  const colors = ["#e0b04a", "#4fbf83", "#e46b5a", "#5b8def", "#c8952c"];
+  for (let i = 0; i < 80; i++) {
+    const p = document.createElement("i");
+    p.style.left = Math.random() * 100 + "%";
+    p.style.background = colors[i % colors.length];
+    p.style.animationDuration = (1.6 + Math.random()) + "s";
+    p.style.animationDelay = (Math.random() * 0.3) + "s";
+    p.style.transform = `rotate(${Math.random() * 360}deg)`;
+    box.appendChild(p);
+  }
+  document.body.appendChild(box);
+  setTimeout(() => box.remove(), 3200);
 }
 
+// ---------- 6. Reacting to taps ----------
+function onTick(e) {
+  const id = e.target.dataset.id;
+  if (!id) return;
+  const levelBefore = levelOf(totalXP());
+  state[id] = e.target.checked;
+  const m = ALL.find(x => x.gate[0] === id);
+  if (m) {
+    if (e.target.checked) state._passed[id] = today(); else delete state._passed[id];
+  }
+  save(state);
+  updateProgress();
+  renderRewards();
+  ALL.forEach(x => document.querySelector(`[data-rline="${x.id}"]`).innerHTML = rewardLine(x));
+
+  const levelAfter = levelOf(totalXP());
+  if (m && e.target.checked) {
+    const ed = earlyDays(m), r = state._rewards[m.id] || {};
+    let msg = `Milestone ${numOf(m)} passed`;
+    msg += ed > 0 ? ` ${plural(ed, "day")} early! +${50 + speedBonus(m)} XP` : `! +50 XP`;
+    if (r.r) msg += ` · Unlocked: ${r.r}`;
+    if (ed >= 0 && r.b) msg += ` + ${r.b}`;
+    confetti();
+    toast(msg, 4000);
+  }
+  if (levelAfter > levelBefore) {
+    setTimeout(() => { confetti(); toast(`Level up! You're now a ${LEVELS[levelAfter][1]}`, 3500); }, m && e.target.checked ? 4200 : 0);
+  }
+}
+["plan", "fundItems", "expItems"].forEach(id => document.getElementById(id).addEventListener("change", onTick));
+
+document.getElementById("rewardList").addEventListener("input", e => {
+  const mid = e.target.dataset.reward;
+  if (!mid) return;
+  state._rewards[mid] = state._rewards[mid] || {};
+  state._rewards[mid][e.target.dataset.field] = e.target.value.trim();
+  save(state);
+  document.querySelector(`[data-rline="${mid}"]`).innerHTML = rewardLine(ALL.find(x => x.id === mid));
+});
+
+["plan"].forEach(el => document.getElementById(el).addEventListener("toggle", () => {
+  openPhases = ALL.filter(m => document.getElementById(m.id).open).map(m => m.id);
+  state._open = openPhases;
+  save(state);
+}, true));
+
+const TABS = { plan: "planTab", rewards: "rewards", business: "fund", exp: "exp", parked: "parked" };
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b));
+  Object.entries(TABS).forEach(([k, el]) => document.getElementById(el).classList.toggle("hidden", k !== b.dataset.tab));
+});
+
+// The progress code carries ticks, pass dates and your rewards.
 document.getElementById("exportBtn").onclick = async () => {
-  const ticked = Object.keys(state).filter(k => state[k] === true);
-  const code = btoa(ticked.join(","));
+  const code = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
   try { await navigator.clipboard.writeText(code); toast("Progress code copied"); }
   catch (e) { prompt("Copy this progress code:", code); }
 };
@@ -374,15 +896,23 @@ document.getElementById("importBtn").onclick = () => {
   const code = prompt("Paste your progress code:");
   if (!code) return;
   try {
-    const ids = atob(code.trim()).split(",").filter(Boolean);
-    state = { _open: openPhases };
-    ids.forEach(id => state[id] = true);
+    const text = decodeURIComponent(escape(atob(code.trim())));
+    if (text.startsWith("{")) {
+      state = JSON.parse(text);
+    } else { // older codes held only ticked ids
+      state = { _open: openPhases };
+      text.split(",").filter(Boolean).forEach(id => state[id] = true);
+    }
+    state._passed = state._passed || {};
+    state._rewards = state._rewards || {};
     save(state); render(); toast("Progress loaded");
   } catch (e) { toast("That code didn't work"); }
 };
 
 document.getElementById("resetBtn").onclick = () => {
-  if (confirm("Untick everything?")) { state = {}; openPhases = ["p0"]; save(state); render(); }
+  if (confirm("Untick everything and clear rewards?")) {
+    state = { _passed: {}, _rewards: {} }; openPhases = ["m1"]; save(state); render();
+  }
 };
 
 render();
