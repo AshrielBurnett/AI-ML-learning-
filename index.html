@@ -119,6 +119,10 @@
   .howto ol { padding-left: 20px; margin: 0; }
   .howto li { margin: 8px 0; font-size: 15px; }
   .parked h3, .fund h3, .exp h3 { font-size: 15px; margin: 16px 0 4px; }
+  .exp .block { margin-top: 22px; padding-top: 6px; border-top: 2px solid var(--line); }
+  .exp .bcount { font-size: 12.5px; font-weight: 600; color: var(--muted); margin-left: 4px; }
+  .exp .bwhen { font-size: 12.5px; font-weight: 600; color: var(--accent); margin: 0 0 4px; }
+  .exp .bintro { font-size: 14px; color: var(--muted); margin: 0 0 4px; }
   .parked ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
   .parked li { margin: 4px 0; }
 
@@ -207,7 +211,7 @@
       <li>Build step: 10 XP · Learn item: 5 XP</li>
       <li>Milestone gate passed: 50 XP</li>
       <li>Speed bonus: +5 XP for every day you beat the target (up to +200)</li>
-      <li>Business step: 10 XP · Expertise item: 5 XP</li>
+      <li>Business step: 10 XP · Expertise item: 5 XP (projects and habits: 10 XP)</li>
     </ul>
     <div id="rewardList"></div>
   </div></section>
@@ -252,7 +256,7 @@
   </div></section>
 
   <section id="exp" class="hidden exp phase"><div class="body" style="padding-top:16px">
-    <p style="margin:0;color:var(--muted)">Deeper understanding for the long run and your path to a master's and PhD, in this order. Dates are compressed 2x too, but this is the first thing to slide in a heavy week. It never blocks the build.</p>
+    <p style="margin:0;color:var(--muted)">The long game: everything you need to understand and run a world-class AI fund yourself, the kind that aims at Medallion and Citadel. Maths and theory run lightly alongside the build. The four blocks come after the core fund is running. None of it ever blocks the 14 milestones.</p>
     <div id="expItems"></div>
     <p class="note">After this: the rest of Bishop (Ch. 2, 5–12) in Year 3 or during a master's.</p>
   </div></section>
@@ -597,6 +601,69 @@ const EXPERTISE = [
   ["fy5", "Bishop, Ch. 14 and 13", "Combining models (ties into boosting) and hidden Markov models (market regimes) · after Milestone 8", "book"],
 ];
 
+// The long game: four blocks toward running a world-class AI fund. After the core fund is running.
+const EXPERT_BLOCKS = [
+  { id: "eb1", title: "The quant brain (the Medallion side)", when: "From mid-2027, after Milestone 13",
+    intro: "Deep learning, time series, signal processing and reinforcement learning: the research craft behind the most successful quant funds.",
+    items: [
+      ["e3", "Neural Networks series — 3Blue1Brown", "Free YouTube · the clearest intuition for how neural networks learn. Watch first.", "video"],
+      ["e1", "Practical Deep Learning for Coders — fast.ai", "Free course · code first, top down. CNNs, sequence models, training on GPUs (use Colab).", "course"],
+      ["e2", "Deep Learning Specialization — Andrew Ng (DeepLearning.AI)", "5 courses on Coursera; course 4 is CNNs. Videos free to audit. The theory behind fast.ai.", "course"],
+      ["e4", "Forecasting: Principles and Practice — Hyndman & Athanasopoulos", "Free online book (otexts.com) · the standard on time-series forecasting.", "book"],
+      ["e5", "Think DSP — Allen Downey", "Free book · signal processing in Python: filters, spectra, noise. The core of separating signal from noise.", "book"],
+      ["e6", "Analysis of Financial Time Series — Ruey Tsay", "Volatility models (GARCH), regime behaviour, the maths of returns.", "book"],
+      ["e7", "Reinforcement Learning: An Introduction — Sutton & Barto", "Free PDF from the authors · the standard RL textbook.", "book"],
+      ["e8", "Reinforcement learning lectures — David Silver (DeepMind / UCL)", "Free on YouTube · the classic RL course.", "video"],
+      ["e9", "Algorithmic and High-Frequency Trading — Cartea, Jaimungal & Penalva", "Optimal execution: how to trade size without moving the price against yourself.", "book"],
+      ["e10", "Machine Learning for Asset Managers — López de Prado", "Short sequel to Advances in Financial Machine Learning (which is in Milestone 13).", "book"],
+      ["e11", "Project: deep learning vs. your boosted-tree model", "Train a CNN or sequence model on the same signals and compare out-of-sample. Expect trees to win; prove it either way.", "do"],
+      ["e12", "Project: an RL execution agent in a simulator", "Learn to split a large MNQ order to cut slippage. Simulation only, never live.", "do"],
+    ]},
+
+  { id: "eb2", title: "The multi-strategy brain (the Citadel side)", when: "Year 2, once your first strategy runs live",
+    intro: "A big fund is a portfolio of many uncorrelated strategies with tight risk control. Learn how they're combined, how prices really form, and the strategy families beyond price action.",
+    items: [
+      ["e15", "Efficiently Inefficient — Lasse Heje Pedersen", "A tour of the main hedge fund strategy families (equity long/short, macro, arbitrage, managed futures), with interviews of the people who run them.", "book"],
+      ["e14", "Expected Returns — Antti Ilmanen", "Where returns actually come from: value, momentum, carry and other factors.", "book"],
+      ["e18", "AQR research library", "Free papers from one of the biggest quant firms on factors, trend following and portfolio construction.", "read"],
+      ["e20", "Introduction to Portfolio Construction and Analysis with Python — EDHEC", "Coursera · free to audit · portfolio optimisation and risk in code.", "course"],
+      ["e13", "Active Portfolio Management — Grinold & Kahn", "The classic on combining many signals and managing active risk.", "book"],
+      ["e16", "Trading and Exchanges — Larry Harris", "Market microstructure: who trades, why, and how prices form.", "book"],
+      ["e17", "Market Microstructure in Practice — Lehalle & Laruelle", "How order books, liquidity and execution algorithms work in real markets.", "book"],
+      ["e19", "Project: decompose your returns into factors", "Use Kenneth French's free data library. If your \"alpha\" is really momentum, investors will see it.", "do"],
+      ["e21", "Project: run 3 uncorrelated strategies as one portfolio", "Budget risk across them; measure their correlation and the combined Sharpe.", "do"],
+    ]},
+
+  { id: "eb3", title: "The CEO and capital brain", when: "Year 2–3, before you raise outside money",
+    intro: "Returns get you noticed; the business is what gets you funded. Raising capital, fund structure, compliance, fund economics, and building the team that runs it with you.",
+    items: [
+      ["e23", "The Man Who Solved the Market — Gregory Zuckerman", "How Jim Simons built Renaissance and Medallion: hiring scientists, culture, secrecy.", "book"],
+      ["e25", "Hedge Fund Operational Due Diligence — Jason Scharfman", "What investors check before they wire money. Most new funds fail here, not on returns.", "book"],
+      ["e24", "NFA guides for CPO and CTA registration", "Free · trading futures for others makes you a CPO/CTA, regulated by the CFTC through the NFA. Get a fund lawyer for your own case.", "read"],
+      ["e26", "Project: build your fund's P&L model", "Management and performance fees, service-provider costs, break-even AUM. Rebuild it every year.", "do"],
+      ["e32b", "Project: interview 2 prime brokers, 2 administrators and 2 auditors", "Learn what each does, what they cost, and what they need from you.", "do"],
+      ["e27", "The Outsiders — William Thorndike", "CEOs as capital allocators: how the best ones decide where money goes.", "book"],
+      ["e28", "Principles — Ray Dalio", "How Bridgewater runs on radical transparency and written decision rules.", "book"],
+      ["e29", "High Output Management — Andy Grove", "Managing people and output, from Intel's legendary CEO.", "book"],
+      ["e30", "Who: The A Method for Hiring — Geoff Smart & Randy Street", "How to hire well, the most important skill once you have a team.", "book"],
+      ["e31", "Project: write your hiring plan", "Who you need at $25M, $100M and $1B in assets, and in what order.", "do"],
+    ]},
+
+  { id: "eb4", title: "The analyst's judgment", when: "Start alongside Milestone 13 — the most valuable skill",
+    intro: "Telling a real edge from an overfit one, and measuring every strategy honestly. This judgment protects every dollar the fund ever manages.",
+    items: [
+      ["e33", "The Deflated Sharpe Ratio — Bailey & López de Prado", "Free paper · adjusting your Sharpe for how many strategies you tried.", "read"],
+      ["e34", "The Probability of Backtest Overfitting — Bailey, Borwein, López de Prado & Zhu", "Free paper · measuring how likely your best backtest is a fluke.", "read"],
+      ["e35", "Evidence-Based Technical Analysis — David Aronson", "The scientific method applied to chart patterns, including data-mining bias. Written for traders like you.", "book"],
+      ["e36", "Fooled by Randomness — Nassim Taleb", "How luck disguises itself as skill in markets.", "book"],
+      ["e37", "Project: capacity study", "Estimate how much money each strategy can trade before slippage eats the edge.", "do"],
+      ["e38", "Project: regime analysis", "Split your results by volatility and trend regimes. Know when your edge works and when it doesn't.", "do"],
+      ["e39", "Habit: pre-register every test", "Write down the expected result before you run a backtest, in your Hypothesis Register.", "do"],
+      ["e40", "Habit: monthly strategy review", "Rolling Sharpe, drawdown vs. expectation, live vs. backtest gap. Set retirement rules before you need them.", "do"],
+      ["e41", "Habit: read and test one quant paper a month (after Milestone 13)", "Build the skill of reading the open literature: López de Prado, the Journal of Portfolio Management, AQR research, signal-processing and time-series papers. Turn each into a testable hypothesis and run it through your own backtester before it touches real money. Skip anyone claiming to sell secret or unpublished signals.", "do"],
+    ]},
+];
+
 // Parallel track toward a fundable track record.
 const FUND = [
   { title: "Keep going all year", items: [
@@ -665,6 +732,7 @@ function totalXP() {
     if (state[m.gate[0]]) xp += 50 + speedBonus(m);
   });
   xp += EXPERTISE.filter(it => state[it[0]]).length * 5;
+  EXPERT_BLOCKS.forEach(b => b.items.forEach(it => { if (state[it[0]]) xp += it[3] === "do" ? 10 : 5; }));
   FUND.forEach(g => xp += g.items.filter(it => state[it[0]]).length * 10);
   return xp;
 }
@@ -725,7 +793,12 @@ function milestoneHTML(m) {
 
 function render() {
   TRACKS.forEach(t => document.getElementById(t.el).innerHTML = t.list.map(milestoneHTML).join(""));
-  document.getElementById("expItems").innerHTML = list(EXPERTISE);
+  document.getElementById("expItems").innerHTML =
+    `<h3>Maths and theory · alongside the build <span class="bcount" data-bcount="base"></span></h3>` + list(EXPERTISE) +
+    EXPERT_BLOCKS.map((b, i) => `<div class="block">
+      <h3>${i + 1}. ${esc(b.title)} <span class="bcount" data-bcount="${b.id}"></span></h3>
+      <div class="bwhen">${esc(b.when)}</div>
+      <p class="bintro">${esc(b.intro)}</p>${list(b.items)}</div>`).join("");
   document.getElementById("fundItems").innerHTML = FUND.map(g => `<h3>${esc(g.title)}</h3>${list(g.items)}`).join("");
   renderRewards();
   updateProgress();
@@ -789,6 +862,10 @@ function updateProgress() {
     return m ? `Up next: <b>Milestone ${numOf(m)} · ${esc(m.title)}</b> · target ${nice(m.target)} (${statusOf(m).text})`
              : `<b>All milestones passed.</b>`;
   }).join("<br>");
+
+  const bc = (sel, items) => { const el = document.querySelector(`[data-bcount="${sel}"]`); if (el) el.textContent = `${items.filter(it => state[it[0]]).length}/${items.length}`; };
+  bc("base", EXPERTISE);
+  EXPERT_BLOCKS.forEach(b => bc(b.id, b.items));
 
   const xp = totalXP(), li = levelOf(xp), nextL = LEVELS[li + 1];
   document.getElementById("lvlName").innerHTML = `Level ${li + 1} · <b>${LEVELS[li][1]}</b>`;
