@@ -171,6 +171,26 @@
   .xp-rules li { margin: 3px 0; }
   .myreward { font-size: 13px; color: var(--muted); margin: 0 0 12px; }
   .myreward b { color: var(--accent); }
+  /* Daily schedule */
+  .day { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px 6px; margin: -8px 0 20px; }
+  .day-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .day-top > b { font-size: 15px; }
+  #dayNow { font-size: 13px; color: var(--muted); text-align: right; }
+  #dayNow b { color: var(--accent); }
+  .slot { display: grid; grid-template-columns: 124px 1fr; gap: 10px; padding: 9px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .day-top + div .slot:first-child { margin-top: 8px; }
+  .slot .tm { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; padding-top: 1px; }
+  .slot .nx { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .slot .nx b { color: var(--ink); font-weight: 600; }
+  .slot.now { background: var(--accent-soft); margin: 0 -16px; padding: 9px 16px; border-top-color: transparent; }
+  .slot.now + .slot { border-top-color: transparent; }
+  .slot .kind {
+    display: inline-block; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+    color: var(--accent); border: 1px solid var(--accent); border-radius: 6px; padding: 0 5px; margin-right: 6px; vertical-align: 1px;
+  }
+  .slot.trade .kind { color: var(--muted); border-color: var(--line); }
+  .day-full summary { font-size: 14px; font-weight: 600; padding: 10px 0; cursor: pointer; border-top: 1px solid var(--line); }
+  .day-full .note { margin: 6px 0 10px; }
   .confetti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 50; }
   .confetti i { position: absolute; top: -12px; width: 8px; height: 12px; border-radius: 2px; animation: fall linear forwards; }
   @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
@@ -193,6 +213,18 @@
     <div class="lvl"><div class="row"><span id="lvlName"></span><span id="lvlXp"></span></div><div class="bar"><i id="lvlBar"></i></div><div class="sub" id="lvlNext"></div></div>
     <div class="ahead" id="aheadLine"></div>
     <div class="lvl claude-row"><div class="row"><span id="clName"></span><span id="clCount"></span></div><div class="bar"><i id="clBar"></i></div><div class="sub">Gold badges in the path are Claude-specific items.</div></div>
+  </div>
+
+  <div class="day" id="dayCard">
+    <div class="day-top"><b>Your day</b><span id="dayNow"></span></div>
+    <div id="dayPlan"></div>
+    <div class="note" id="dayHours" style="margin:6px 0 4px"></div>
+    <details class="day-full">
+      <summary id="daySummary">Today's full schedule</summary>
+      <div id="dayList"></div>
+      <p class="note"><b>Summer and winter times switch by themselves.</b> From late October to late March (UK winter time), London opens at 4:00 am your time and New York an hour later, so the app shows your winter day: London 4:00–6:00, gym after Bible study, New York 9:00 am–12:30 pm. Your Google Calendar has both sets.</p>
+      <p class="note"><b>Sleep:</b> 9:00 pm to 3:00 am is 6 hours, which is the minimum, not the target. If you feel foggy, take a 20-minute nap in the lunch break.</p>
+    </details>
   </div>
 
   <div class="tabs">
@@ -237,7 +269,7 @@
           <li><b>No real money until 30 days on demo</b> with zero manual fixes.</li>
           <li><b>Use Google Colab for heavy work.</b> Your 8 GB laptop will struggle with ML.</li>
           <li><b>Expertise tab:</b> deeper study at a lighter pace. It never blocks the build; it's the first thing to drop in a heavy week.</li>
-          <li><b>Rest is risk management.</b> A compressed plan is a sprint, and burnout is the biggest threat to it. With a 2:30 AM start, keep Sundays off and protect your sleep.</li>
+          <li><b>Rest is risk management.</b> A compressed plan is a sprint, and burnout is the biggest threat to it. With a 3:00 AM start, lights out by 9:00 PM on work nights is a hard wall. Your daily schedule is in the card at the top, and it matches your Google Calendar.</li>
         </ol>
       </div>
     </details>
@@ -262,21 +294,42 @@
   </div></section>
 
   <section id="parked" class="hidden parked phase"><div class="body" style="padding-top:16px">
-    <p style="margin:0;color:var(--muted)">Not bad videos, just not needed right now. The agency and agent videos are now part of the path.</p>
+    <p style="margin:0;color:var(--muted)">All 90 videos in your playlist, and the 5 agent resources from your saved Instagram post, are now placed: in the Path, the Expertise tab, or here. These are not bad, just not needed right now.</p>
     <h3>Deferred until a problem needs it</h3>
     <ul>
       <li>Introduction to Tensors · 11m (deep learning, Year 2+)</li>
       <li>Introduction to Mathematical Thinking · 11h 28m (Year 3+)</li>
       <li>Learn All the Math in the World · 38m</li>
       <li>How to Self Study Pure Math · 10m</li>
-      <li>Not on the list at all: stochastic calculus, reinforcement learning, C++, CFA, a quant master's</li>
+      <li>Build a Generative Adversarial Neural Network with Tensorflow and Python (Nicholas Renotte) · 2h 01m (generative models; not needed for trading)</li>
+      <li>Quantum Computing Course – Math and Theory for Beginners (freeCodeCamp) · 1h 36m</li>
+      <li>Not on the list at all: stochastic calculus, C++, CFA, a quant master's</li>
     </ul>
     <h3>Reference only (look things up, don't watch through)</h3>
     <ul>
       <li>The complete guide to Python (Clear Code) · 11h 09m</li>
       <li>SQL Full Course for Beginners · 30h</li>
-      <li>System Design Explained (Hayk Simonyan) · 2h 04m (same as the freeCodeCamp one)</li>
+      <li>System Design Explained (Hayk Simonyan) · saved twice, 1h 50m and 2h 04m versions (same topics as the freeCodeCamp one in the Path)</li>
+      <li>Python for Data Analytics – Full Course for Beginners · 11h 10m (alternative to Python for Data Science; pick one)</li>
+      <li>Learn Data Science Tutorial – Full Course for Beginners (freeCodeCamp) · 5h 52m (covered by the Path's Python and stats courses)</li>
+      <li>AI Foundations Course – Python, ML, Deep Learning, Data Science (freeCodeCamp) · 10h 22m (overlaps the Path's ML courses)</li>
+      <li>Statistics – A Full University Course on Data Science Basics (freeCodeCamp) · 8h 15m (alternative to numiqo)</li>
+      <li>Data Structures and Algorithms Full Course · 4h (same topics as the ByteQuest one in Expertise)</li>
+      <li>Deep Learning Full Course 2026 (Simplilearn) · 7h 42m (fast.ai and Andrew Ng cover it better)</li>
+      <li>Prompt Engineering Tutorial – Master ChatGPT and LLM Responses (freeCodeCamp) · 42m (older and ChatGPT-focused; the Claude prompt guide in Milestone 2 replaces it)</li>
       <li>Python for Data Analysis — Wes McKinney (the pandas reference)</li>
+      <li>Building AI agents with Microsoft Foundry (Krish Naik) · 17m (from your Instagram save; Milestone 14 already has a Foundry video, so watch this hands-on one only if a client runs on Azure)</li>
+    </ul>
+    <h3>Out of date (Claude Code now does this)</h3>
+    <ul>
+      <li>Build Anything with OpenAI o1, Here's How (David Ondrej) · 1h 01m</li>
+      <li>Use ChatGPT to Code a Full Stack App – Full Course (freeCodeCamp) · 2h 17m</li>
+    </ul>
+    <h3>Roadmaps (you already have yours)</h3>
+    <ul>
+      <li>How to learn Machine Learning (ML/AI Roadmap 2024) · 26m</li>
+      <li>How To Self Study AI FAST (Tina Huang) · 13m</li>
+      <li>Fastest way to become an AI Engineer in 2026 (Andrew Codesmith) · 17m</li>
     </ul>
     <h3>Not needed for your system</h3>
     <ul>
@@ -294,6 +347,7 @@
       <li>What Actually Matters in Your 20s · 17m</li>
       <li>Read Books That Challenge Your Mind (Robert Greene) · 5m</li>
       <li>The Future of Computer Science (Lattice) · 9m</li>
+      <li>This Took Me 150 Hours to Code (Kenny Gunderman) · 17m (a build-in-public story)</li>
     </ul>
   </div></section>
 
@@ -331,6 +385,7 @@ const MILESTONES = [
       ["c3", "Claude 101 — Anthropic Academy", "Free · the official tour of what Claude can do.", "course"],
       ["c4", "AI Fluency: Framework & Foundations — Anthropic Academy", "Free · how to work with AI well: delegating, describing, checking its work.", "course"],
       ["c41", "Follow Anthropic: news, engineering blog, YouTube and release notes", "Claude ships new features constantly. Skim weekly and add anything useful to this plan.", "read"],
+      ["v24", "Coding was hard until I learned this — Catherine Li", "14m · how to escape tutorial hell. Same idea as this plan: build first.", "video"],
     ],
     gate: ["p0g", "Your trade history loads in Python and prints your win rate and average R, and the code is on GitHub."] },
 
@@ -356,6 +411,7 @@ const MILESTONES = [
       ["a1l4", "How AI Agents Actually Work (Every Piece Explained & Built)", "Tech With Tim · 19m · add it to your playlist", "video"],
       ["c5", "Prompt engineering guide — Claude docs", "docs.claude.com · clear instructions, examples, XML tags, letting Claude think. Keep it open while you write prompts.", "read"],
       ["c6", "API Fundamentals + Real World Prompting — Anthropic courses", "Free notebooks on GitHub (anthropics/courses), next to the prompt engineering tutorial.", "course"],
+      ["v26", "Large Language Models explained briefly — 3Blue1Brown", "8m · what's actually inside the model your agent uses.", "video"],
     ],
     gate: ["p5g", "Every closed MT5 trade lands in your journal with no manual typing for 2 straight weeks, plus an AI weekly summary — and the agent uses at least two tools to correctly answer 10 questions about your trades. → Journal module v1."] },
 
@@ -377,6 +433,8 @@ const MILESTONES = [
       ["c8", "Claude Code: Best practices for agentic coding — Anthropic Engineering", "The official playbook for working with Claude Code.", "read"],
       ["c9", "Claude Code: A Highly Agentic Coding Assistant — DeepLearning.AI × Anthropic", "Free short course · explore, build, test and debug real projects with Claude Code.", "course"],
       ["c10", "Claude Code docs: settings, CLAUDE.md, slash commands, hooks", "docs.claude.com · reference when you want Claude Code to work your way.", "read"],
+      ["v31", "How principled coders outperform the competition — Coderized", "11m · the coding principles behind clean, testable code.", "video"],
+      ["v41", "How I ACTUALLY Use AI To Code (Not Vibe Coding) — Luke Made It", "9m · staying in control while AI writes code.", "video"],
     ],
     gate: ["pfg", "A written, versioned rulebook plus code that reproduces at least 80% of your own BOS/POI calls, and a list of the cases where your judgment beats the rules."] },
 
@@ -393,6 +451,7 @@ const MILESTONES = [
       ["p2a", "Statistics: A Full Lecture to Learn Data Science", "numiqo · 4h 55m", "video"],
       ["p2j", "Data Science from Scratch — Grus, statistics and probability chapters", "Continue your book #1.", "book"],
       ["p2k", "Think Stats — Allen Downey", "Free. Statistics through Python; use it where Grus moves too fast.", "book"],
+      ["v7", "Teach me STATISTICS in half an hour! Seriously. — zedstatistics", "42m · watch first, before the full lecture.", "video"],
     ],
     info: [["Watch for", "Multiple testing: try 200 variants and ~10 will look brilliant by pure chance."]],
     gate: ["p2g", "A one-page answer: is your edge statistically real, how many more trades until you'd know for sure, and what's the worst drawdown you should expect?"] },
@@ -409,6 +468,7 @@ const MILESTONES = [
     learn: [
       ["a2l1", "Agentic AI — Andrew Ng (DeepLearning.AI)", "~10h · free to watch · reflection, tool use, planning, multi-agent — built in plain Python.", "course"],
       ["a2l2", "Hugging Face AI Agents Course — Units 1–2", "Free · agent basics and the main frameworks (smolagents, LlamaIndex, LangGraph).", "course"],
+      ["ig4", "Building Effective AI Agents: Architecture Patterns and Implementation Frameworks — Anthropic", "Free guide on claude.com · ~1h read · the long version of the blog post from Milestone 2, with real use cases and a framework for picking the right pattern. Reread the use-cases part when you pick your agency niche.", "read"],
       ["a2l3", "A Practical Guide to Building Agents — OpenAI", "Free PDF. A second, vendor-neutral view of the same design ideas.", "read"],
       ["c15", "Effective context engineering for AI agents — Anthropic Engineering", "What to put in the model's context, and what to leave out.", "read"],
       ["c16", "Writing effective tools for agents — Anthropic Engineering", "How to design tools Claude uses well.", "read"],
@@ -430,6 +490,7 @@ const MILESTONES = [
       ["p3a", "Algorithmic Trading Python for Beginners", "QuantProgram · 3h 01m", "video"],
       ["p3b", "Python Algorithmic Trading Course: Massive, SnapTrade & Alpaca", "freeCodeCamp · 1h 44m · Alpaca isn't MT5: learn the pattern, swap in MetaTrader5", "video"],
       ["p3k", "Systematic Trading — Robert Carver", "The most practical book for moving from discretionary to systematic.", "book"],
+      ["v20", "Peak Algo Trading Full Course | Commodity Market Futures — Peak Trading Research", "2h 57m · systematic futures trading: entry and exit rules, optimisation, incubation, portfolios, when to stop a system.", "video"],
     ],
     info: [["Bias killers", "Look-ahead bias, survivorship bias, point-in-time data. Be able to name and defend against all three."]],
     gate: ["p3g", "Your rules backtested event-driven on 2+ years with costs, walk-forward tested, and still profitable at 2x costs."] },
@@ -447,6 +508,7 @@ const MILESTONES = [
       ["a3l1", "Introduction to Model Context Protocol — Anthropic Academy", "Free.", "course"],
       ["a3l2", "Claude Code in Action — Anthropic Academy", "Free.", "course"],
       ["a3l3", "Introduction to agent skills — Anthropic Academy", "Free.", "course"],
+      ["ig1", "AI Agents Full Course 2026: Master Agentic AI (2 Hours) — Nick Saraev", "2h 13m · hands-on: packaging real tasks into reusable Claude Code skills. Watch it before Nate Herk's 10h course below. It also shows Codex and Antigravity, so you see the alternatives.", "video"],
       ["p5g2", "Build & Sell with Claude Code", "Nate Herk · 10h · sub-agents, skills and agent-teams chapters", "video"],
       ["a3l4", "Model Context Protocol documentation", "modelcontextprotocol.io · reference while building your server.", "read"],
       ["c21", "Agent Skills with Anthropic — DeepLearning.AI", "Free to watch · 2h 19m · skills that work across the Claude app, Claude Code, the API and the Agent SDK.", "course"],
@@ -489,10 +551,12 @@ const MILESTONES = [
     learn: [
       ["p5e", "How to Build an AI Agent Team for Automated Workflows", "AI Master · 10m", "video"],
       ["p5f", "The Multi-Agent Architecture That Actually Ships", "AI Engineer · 19m", "video"],
+      ["ig3", "AI Agents in LangGraph — DeepLearning.AI", "Free to watch · 1h 42m · taught by LangChain's founder. Builds an agent from scratch, then in LangGraph, with persistence (your shared memory) and human-in-the-loop (your sign-off guardrail). LangGraph is one of the most-used agent frameworks, so clients will ask for it. Some code may lag the current LangGraph version.", "course"],
       ["a4l1", "Claude Agent SDK documentation", "docs.claude.com · reference while building.", "read"],
       ["a4l2", "$75M Founder Reveals His Agentic Engineering Setup", "David Ondrej · 52m", "video"],
       ["a4l3", "Build an Agentic Software Factory: Deep Dive", "Steve (Builder.io) · 18m", "video"],
       ["c30", "How we built our multi-agent research system — Anthropic Engineering", "How Anthropic built Claude's own Research feature with multiple agents.", "read"],
+      ["v21", "how to actually use ai for trading — Moon Dev", "7h 11m · open-source Python trading agents. Take the backtesting and research ideas; skip the parts where AI places trades.", "video"],
     ],
     gate: ["a4g", "The research desk delivers a useful briefing before 5 sessions in a row, with every agent's work logged."] },
 
@@ -508,6 +572,9 @@ const MILESTONES = [
     ],
     learn: [
       ["p6b", "SQL for Data Analytics: Intermediate Course + Project", "6h 26m", "video"],
+      ["v30", "SQL Data Warehouse from Scratch — Data with Baraa", "4h 23m · hands-on project: build the database for your candles and journal.", "video"],
+      ["v36", "How I would learn Data Engineering (if I could start over) — jayzern", "11m · orientation before the warehouse project.", "video"],
+      ["m7l1", "Designing Data-Intensive Applications (2nd ed.) — Kleppmann & Riccomini", "Book · get the 2nd edition (March 2026). Read the chapters on data models, storage and stream processing right before you move your candles and journal into SQL: they show you how to design one database every module can trust. Save the rest of the book for Expertise block 2.", "book"],
     ],
     gate: ["prg", "A first tear sheet: monthly returns, drawdown chart, key metrics, and one paragraph on who loses this money to you and why."] },
 
@@ -529,6 +596,7 @@ const MILESTONES = [
       ["c36", "Prompt Evaluations — Anthropic courses (GitHub)", "Free notebooks on building evals for Claude.", "course"],
       ["c37", "Introducing advanced tool use — Anthropic Engineering", "Newer tool-use features for bigger, more efficient agents.", "read"],
       ["c24", "Code execution with MCP — Anthropic Engineering", "Making agents with many tools cheaper and faster.", "read"],
+      ["v12", "How To Build AI Apps That Don't Fail For Beginners — corbin", "14m · what keeps AI apps working past the demo.", "video"],
     ],
     gate: ["a5g", "Your agents pass at least 90% of the eval set, every run is traced, and you know the cost per run."] },
 
@@ -550,6 +618,7 @@ const MILESTONES = [
       ["a6l4", "57 Minutes of AI Training That Will Explode Your Business in 2026", "Michele Torti · 58m", "video"],
       ["a6l5", "I Quit Selling This… Here's My Agency Course (2026)", "Owen Rensland · 20h · the AI systems section only", "video"],
       ["a6l6", "$100M Offers — Alex Hormozi", "How to build an offer people feel stupid saying no to.", "book"],
+      ["v22", "Build Content Creation n8n AI Agents + FREE Templates — Ritesh Verma", "43m · n8n, the no-code automation tool many AI agencies sell.", "video"],
     ],
     gate: ["a6g", "One paying client delivered, with a case study you can show the next prospect."] },
 
@@ -567,6 +636,8 @@ const MILESTONES = [
       ["p4b", "Steal My Machine Learning Project Template", "Marina Wyss · 24m", "video"],
       ["p4l", "Advances in Financial Machine Learning — López de Prado", "Purged CV, triple-barrier, meta-labelling. Hard and essential.", "book"],
       ["p4j", "Machine Learning for Algorithmic Trading — Stefan Jansen", "Your book #2. After ISLR.", "book"],
+      ["v6", "Machine Learning Course for Beginners — freeCodeCamp", "9h 52m · the hands-on scikit-learn course this milestone needed.", "video"],
+      ["v18", "Regression Intro — Practical Machine Learning Tutorial with Python p.2 — sentdex", "11m · regression on stock price data. Watch the series around it.", "video"],
     ],
     gate: ["p4g", "Write your expected out-of-sample Sharpe before looking at the test set, then compare. The model improves results on data it never saw. → Pattern Learner v1."] },
 
@@ -586,6 +657,8 @@ const MILESTONES = [
       ["a7l3", "$100M Leads — Alex Hormozi", "How to get a steady flow of clients.", "book"],
       ["a7l4", "Microsoft Foundry — AI app & agent factory", "Microsoft Mechanics · 12m · bigger clients often run on Azure", "video"],
       ["c45", "Claude with Amazon Bedrock / Google Cloud Vertex AI — Anthropic Academy", "Free · bigger clients often run Claude through their cloud provider.", "course"],
+      ["ig5", "A2A: The Agent2Agent Protocol — DeepLearning.AI (Google Cloud & IBM)", "1h 27m · MCP connects an agent to data and tools; A2A lets agents built on different frameworks work together. You need it when a client's agents and yours don't share a framework. One of its agents runs Claude on Google Cloud.", "course"],
+      ["v38", "Notion Tutorial — Full Course for Beginners [2025] — Productive Dude", "2h 16m · if you run your SOPs, CRM and client docs in Notion.", "video"],
     ],
     gate: ["a7g", "3 clients on monthly retainers, delivery runs on written SOPs, and your internal agents save you at least 5 hours a week."] },
 ];
@@ -595,10 +668,22 @@ const EXPERTISE = [
   ["p1a", "The Data Movie: Data Literacy Explained Visually", "Data with Baraa · 1h 56m · big picture · Oct", "video"],
   ["p2b", "Everything About Calculus Explained Slowly", "Bub Explains · 2h 13m · late Oct", "video"],
   ["p2l", "Essence of Linear Algebra — 3Blue1Brown", "Free YouTube series · ~3h · Nov · add it to your playlist", "video"],
+  ["v32", "Linear Algebra — Full College Course — freeCodeCamp", "11h 40m · go deeper after 3Blue1Brown.", "video"],
+  ["v33", "Calculus 2 — Full College Course — freeCodeCamp", "6h 53m · series and integrals. Optional.", "video"],
+  ["v5", "Mathematics for Machine Learning Tutorial (3 Complete Courses in 1 video) — My Lesson", "9h 26m · video companion to the MML book: linear algebra, calculus, probability.", "video"],
   ["p4m", "Mathematics for Machine Learning — Deisenroth et al.", "Free · Ch. 2, 5, 6 (linear algebra, vector calculus, probability) · Dec–Feb", "book"],
+  ["v35", "Learn To Write Math Proofs From Scratch — BriTheMathGuy", "2h 21m · the skill you'll need for Bishop and a master's.", "video"],
   ["p4b1", "Pattern Recognition and Machine Learning — Bishop, Ch. 1", "Your book #3 begins · free PDF from Microsoft Research · ~Feb 2027", "book"],
   ["p4b2", "Bishop, Ch. 3–4: linear models for regression and classification", "Alongside Milestone 8 · Feb–Apr 2027", "book"],
   ["fy5", "Bishop, Ch. 14 and 13", "Combining models (ties into boosting) and hidden Markov models (market regimes) · after Milestone 8", "book"],
+];
+
+// Computer science foundations: optional, alongside the build.
+const CS_FOUNDATIONS = [
+  ["v1", "Harvard CS50 — Full Computer Science University Course — freeCodeCamp & CS50", "24h 52m · the classic intro to how computers and code really work. Dip in when something in your code confuses you.", "video"],
+  ["v4", "Harvard CS50's Artificial Intelligence with Python — freeCodeCamp & CS50", "11h 51m · search, logic, probability, optimisation, learning, neural networks: the ideas under modern AI.", "video"],
+  ["v10", "Data Structures And Algorithms Visually Explained — ByteQuest", "4h 09m · lists, trees, graphs, sorting. Makes your code faster and clearer.", "video"],
+  ["v14", "Introduction to Operating Systems — Mike Murphy (Lectures for Sleep & Study)", "4h 39m · processes, memory, files. Useful once your system runs on servers.", "video"],
 ];
 
 // The long game: four blocks toward running a world-class AI fund. After the core fund is running.
@@ -607,8 +692,11 @@ const EXPERT_BLOCKS = [
     intro: "Deep learning, time series, signal processing and reinforcement learning: the research craft behind the most successful quant funds.",
     items: [
       ["e3", "Neural Networks series — 3Blue1Brown", "Free YouTube · the clearest intuition for how neural networks learn. Watch first.", "video"],
+      ["v42", "Neural Networks — Theory and Implementation — Computational Electromagnetics", "1h 04m · build a neural network from scratch, maths and code.", "video"],
       ["e1", "Practical Deep Learning for Coders — fast.ai", "Free course · code first, top down. CNNs, sequence models, training on GPUs (use Colab).", "course"],
+      ["v16", "MIT Introduction to Deep Learning (2024) | 6.S191", "1h 10m lecture · MIT's course; the whole series is free on YouTube.", "video"],
       ["e2", "Deep Learning Specialization — Andrew Ng (DeepLearning.AI)", "5 courses on Coursera; course 4 is CNNs. Videos free to audit. The theory behind fast.ai.", "course"],
+      ["v39", "Become AI Researcher From Scratch — Vuk Rosić", "3h 09m · LLMs, PyTorch, neural networks and transformers, research-style.", "video"],
       ["e4", "Forecasting: Principles and Practice — Hyndman & Athanasopoulos", "Free online book (otexts.com) · the standard on time-series forecasting.", "book"],
       ["e5", "Think DSP — Allen Downey", "Free book · signal processing in Python: filters, spectra, noise. The core of separating signal from noise.", "book"],
       ["e6", "Analysis of Financial Time Series — Ruey Tsay", "Volatility models (GARCH), regime behaviour, the maths of returns.", "book"],
@@ -616,6 +704,7 @@ const EXPERT_BLOCKS = [
       ["e8", "Reinforcement learning lectures — David Silver (DeepMind / UCL)", "Free on YouTube · the classic RL course.", "video"],
       ["e9", "Algorithmic and High-Frequency Trading — Cartea, Jaimungal & Penalva", "Optimal execution: how to trade size without moving the price against yourself.", "book"],
       ["e10", "Machine Learning for Asset Managers — López de Prado", "Short sequel to Advances in Financial Machine Learning (which is in Milestone 13).", "book"],
+      ["v19", "why ai neural networks will change trading forever and how to build yours in minutes! — QuantProgram", "21m · a quick neural-network trading demo. Run it through the project below before believing it.", "video"],
       ["e11", "Project: deep learning vs. your boosted-tree model", "Train a CNN or sequence model on the same signals and compare out-of-sample. Expect trees to win; prove it either way.", "do"],
       ["e12", "Project: an RL execution agent in a simulator", "Learn to split a large MNQ order to cut slippage. Simulation only, never live.", "do"],
     ]},
@@ -632,6 +721,7 @@ const EXPERT_BLOCKS = [
       ["e17", "Market Microstructure in Practice — Lehalle & Laruelle", "How order books, liquidity and execution algorithms work in real markets.", "book"],
       ["e19", "Project: decompose your returns into factors", "Use Kenneth French's free data library. If your \"alpha\" is really momentum, investors will see it.", "do"],
       ["e21", "Project: run 3 uncorrelated strategies as one portfolio", "Budget risk across them; measure their correlation and the combined Sharpe.", "do"],
+      ["e22", "Designing Data-Intensive Applications — the rest of the book", "Replication, partitioning, transactions and distributed systems: what you need once several strategies, machines and data feeds run at the same time. You read the first part in Milestone 10.", "book"],
     ]},
 
   { id: "eb3", title: "The CEO and capital brain", when: "Year 2–3, before you raise outside money",
@@ -660,6 +750,7 @@ const EXPERT_BLOCKS = [
       ["e38", "Project: regime analysis", "Split your results by volatility and trend regimes. Know when your edge works and when it doesn't.", "do"],
       ["e39", "Habit: pre-register every test", "Write down the expected result before you run a backtest, in your Hypothesis Register.", "do"],
       ["e40", "Habit: monthly strategy review", "Rolling Sharpe, drawdown vs. expectation, live vs. backtest gap. Set retirement rules before you need them.", "do"],
+      ["v40", "10 Papers Every Future AI Engineer Must Read — Marina Wyss", "11m · a starter list for your monthly paper habit.", "video"],
       ["e41", "Habit: read and test one quant paper a month (after Milestone 13)", "Build the skill of reading the open literature: López de Prado, the Journal of Portfolio Management, AQR research, signal-processing and time-series papers. Turn each into a testable hypothesis and run it through your own backtester before it touches real money. Skip anyone claiming to sell secret or unpublished signals.", "do"],
     ]},
 ];
@@ -731,7 +822,7 @@ function totalXP() {
     xp += m.learn.filter(it => state[it[0]]).length * 5;
     if (state[m.gate[0]]) xp += 50 + speedBonus(m);
   });
-  xp += EXPERTISE.filter(it => state[it[0]]).length * 5;
+  xp += EXPERTISE.concat(CS_FOUNDATIONS).filter(it => state[it[0]]).length * 5;
   EXPERT_BLOCKS.forEach(b => b.items.forEach(it => { if (state[it[0]]) xp += it[3] === "do" ? 10 : 5; }));
   FUND.forEach(g => xp += g.items.filter(it => state[it[0]]).length * 10);
   return xp;
@@ -748,7 +839,7 @@ const idsOf = m => m.build.concat(m.learn).map(it => it[0]).concat(m.gate[0]);
 
 // Claude mastery: new Claude items use ids c1, c2, ...; these earlier items are Claude-specific too.
 const CLAUDE_EXTRA = ["p1d", "p1e", "p5c", "p5d", "p5g2", "a1a", "a1c", "a1l1", "a1l2", "a1l3",
-  "a3a", "a3b", "a3c", "a3l1", "a3l2", "a3l3", "a3l4", "a4d", "a4l1"];
+  "a3a", "a3b", "a3c", "a3l1", "a3l2", "a3l3", "a3l4", "a4d", "a4l1", "ig1", "ig4"];
 const isClaude = id => /^c\d+$/.test(id) || CLAUDE_EXTRA.includes(id);
 const CLAUDE_TIERS = [[0, "Beginner"], [0.2, "Power user"], [0.4, "Builder"], [0.6, "Expert"], [0.8, "Master"], [1, "Disgustingly exceptional"]];
 
@@ -791,10 +882,113 @@ function milestoneHTML(m) {
     </details>`;
 }
 
+// ---------- Daily schedule (matches your Google Calendar, in your phone's local time) ----------
+// Each row: start, end, what, badge, kind. Kind "build" and "learn" rows show your next plan step.
+const SLEEP = ["21:00", "03:00", "Lights out (wake 3:00 am)", "", "sleep"];
+const WEEKDAY = {
+  summer: [
+    ["03:00", "05:00", "London session", "Trade", "trade"],
+    ["05:00", "06:00", "Gym", "", "life"],
+    ["06:00", "06:30", "Breakfast", "", "life"],
+    ["06:30", "07:30", "Bible study", "", "life"],
+    ["07:30", "08:00", "New York prep", "", "life"],
+    ["08:00", "11:30", "New York session", "Trade", "trade"],
+    ["11:30", "13:00", "Lunch and break", "", "life"],
+    ["13:00", "15:00", "Backtesting", "Build", "build"],
+    ["15:00", "20:00", "Study", "Learn", "learn"],
+    ["20:00", "21:00", "Wind down, screens off", "", "life"],
+    SLEEP],
+  winter: [
+    ["03:00", "04:00", "London prep: Frankfurt open, charts, alerts", "", "life"],
+    ["04:00", "06:00", "London session", "Trade", "trade"],
+    ["06:00", "06:30", "Breakfast", "", "life"],
+    ["06:30", "07:30", "Bible study", "", "life"],
+    ["07:30", "08:30", "Gym", "", "life"],
+    ["08:30", "09:00", "Travel home and New York prep", "", "life"],
+    ["09:00", "12:30", "New York session", "Trade", "trade"],
+    ["12:30", "13:30", "Lunch and break", "", "life"],
+    ["13:30", "15:30", "Backtesting", "Build", "build"],
+    ["15:30", "20:00", "Study", "Learn", "learn"],
+    ["20:00", "21:00", "Wind down, screens off", "", "life"],
+    SLEEP],
+};
+// Friday: lighter study, free evening, lights out 9:30.
+const friday = rows => rows.filter(r => r[4] !== "sleep" && r[0] !== "20:00")
+  .map(r => r[4] === "learn" ? [r[0], "18:30", "Study (lighter Friday)", "Learn", "learn"] : r)
+  .concat([["18:30", "21:30", "Free time", "", "life"], ["21:30", "06:30", "Lights out", "", "sleep"]]);
+const SATURDAY = [
+  ["06:30", "07:30", "Bible study", "", "life"],
+  ["09:30", "11:30", "Backtesting", "Build", "build"],
+  ["11:30", "12:30", "Lunch and break", "", "life"],
+  ["12:30", "17:00", "Study", "Learn", "learn"],
+  ["17:00", "00:00", "Free time", "", "life"],
+];
+const SUNDAY = [
+  ["06:00", "07:00", "Prepare for church", "", "life"],
+  ["06:30", "07:30", "Bible study", "", "life"],
+  ["07:00", "12:00", "Church", "", "life"],
+  ["12:00", "14:00", "Rest and lunch", "", "life"],
+  ["14:00", "16:00", "Backtesting", "Build", "build"],
+  ["16:00", "20:30", "Study", "Learn", "learn"],
+  ["20:30", "21:00", "Wind down", "", "life"],
+  SLEEP,
+];
+// Winter times = while the UK is on GMT (late October to late March).
+function isWinter(d) {
+  try {
+    const h = +new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", hour: "2-digit", hour12: false }).format(d) % 24;
+    return h === d.getUTCHours();
+  } catch (e) { return false; }
+}
+function dayRows(d) {
+  const w = WEEKDAY[isWinter(d) ? "winter" : "summer"], wd = d.getDay();
+  return wd === 0 ? SUNDAY : wd === 6 ? SATURDAY : wd === 5 ? friday(w) : w;
+}
+const hoursOf = (rows, kind) => rows.filter(r => r[4] === kind).reduce((h, r) => h + (toMin(r[1]) - toMin(r[0])) / 60, 0);
+let DAY = WEEKDAY.summer;
+const toMin = s => +s.slice(0, 2) * 60 + +s.slice(3, 5);
+const ampm = s => +s.slice(0, 2) < 12 ? "am" : "pm";
+const clock = s => `${+s.slice(0, 2) % 12 || 12}:${s.slice(3, 5)}`;
+const span = (a, b) => ampm(a) === ampm(b) ? `${clock(a)}–${clock(b)} ${ampm(b)}` : `${clock(a)} ${ampm(a)}–${clock(b)} ${ampm(b)}`;
+function slotIndex(d) {
+  const t = d.getHours() * 60 + d.getMinutes();
+  return DAY.findIndex(([a, b]) => { const s = toMin(a), e = toMin(b); return s < e ? t >= s && t < e : t >= s || t < e; });
+}
+function renderDay() {
+  const d = new Date(), wd = d.getDay(), winter = isWinter(d);
+  DAY = dayRows(d);
+  const i = slotIndex(d);
+  const m = MILESTONES.find(x => !state[x.gate[0]]);
+  const nb = m && m.build.find(it => !state[it[0]]);
+  const nl = (m && m.learn.find(it => !state[it[0]])) || EXPERTISE.find(it => !state[it[0]]);
+  const where = m ? ` · Milestone ${numOf(m)}` : "";
+  const next = {
+    build: !m ? "All milestones passed." : nb ? `Next: <b>${esc(nb[1])}</b>${where}` : `Next: <b>pass the gate</b>${where}`,
+    learn: nl ? `Next: <b>${esc(nl[1])}</b>. Keep building first and open this when you get stuck.` : "Everything ticked.",
+  };
+  const row = (s, j) => `<div class="slot ${s[4]}${j === i ? " now" : ""}">
+      <div class="tm">${s[4] === "sleep" ? `${clock(s[0])} ${ampm(s[0])}` : span(s[0], s[1])}</div>
+      <div>${s[3] ? `<span class="kind">${s[3]}</span>` : ""}${esc(s[2])}${next[s[4]] ? `<div class="nx">${next[s[4]]}</div>` : ""}</div>
+    </div>`;
+  const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  document.getElementById("dayNow").innerHTML = i >= 0
+    ? `Now: <b>${esc(DAY[i][2])}</b> until ${clock(DAY[i][1])} ${ampm(DAY[i][1])}`
+    : `${DAYS[wd]} · <b>free time</b>`;
+  document.getElementById("dayPlan").innerHTML = DAY.map((s, j) => next[s[4]] ? row(s, j) : "").join("");
+  document.getElementById("dayList").innerHTML = DAY.map(row).join("");
+  document.getElementById("daySummary").textContent = `${DAYS[wd]}'s full schedule · ${winter ? "winter" : "summer"} times`;
+  const w = WEEKDAY[winter ? "winter" : "summer"], f = friday(w), week = [w, w, w, w, f, SATURDAY, SUNDAY];
+  const b = week.reduce((h, r) => h + hoursOf(r, "build"), 0), l = week.reduce((h, r) => h + hoursOf(r, "learn"), 0);
+  document.getElementById("dayHours").textContent =
+    `Plan time: ${b} h backtesting + ${l} h study = ${b + l} h a week. The 2x pace needs about 30–35 h, so you have room to spare. About 3 h of the study time goes to the Expertise tab.`;
+}
+setInterval(renderDay, 60000);
+
 function render() {
   TRACKS.forEach(t => document.getElementById(t.el).innerHTML = t.list.map(milestoneHTML).join(""));
   document.getElementById("expItems").innerHTML =
     `<h3>Maths and theory · alongside the build <span class="bcount" data-bcount="base"></span></h3>` + list(EXPERTISE) +
+    `<h3>Computer science foundations · optional, alongside the build <span class="bcount" data-bcount="cs"></span></h3>` + list(CS_FOUNDATIONS) +
     EXPERT_BLOCKS.map((b, i) => `<div class="block">
       <h3>${i + 1}. ${esc(b.title)} <span class="bcount" data-bcount="${b.id}"></span></h3>
       <div class="bwhen">${esc(b.when)}</div>
@@ -865,6 +1059,7 @@ function updateProgress() {
 
   const bc = (sel, items) => { const el = document.querySelector(`[data-bcount="${sel}"]`); if (el) el.textContent = `${items.filter(it => state[it[0]]).length}/${items.length}`; };
   bc("base", EXPERTISE);
+  bc("cs", CS_FOUNDATIONS);
   EXPERT_BLOCKS.forEach(b => bc(b.id, b.items));
 
   const xp = totalXP(), li = levelOf(xp), nextL = LEVELS[li + 1];
@@ -880,6 +1075,7 @@ function updateProgress() {
   document.getElementById("clCount").textContent = `${cDone} of ${cIds.length}`;
   document.getElementById("clBar").style.width = (cShare * 100) + "%";
 
+  renderDay();
   document.getElementById("aheadLine").innerHTML = ahead > 0
     ? `Ahead of schedule: <b>${plural(ahead, "day")}</b> across ${plural(early, "early milestone")}`
     : (ahead < 0 ? `Behind schedule by ${plural(-ahead, "day")}. Beat the next target to win it back.` : `Beat a target date to earn speed bonus XP.`);
