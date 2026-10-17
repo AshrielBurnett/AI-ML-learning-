@@ -51,7 +51,8 @@
   .bar > i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 99px; transition: width .3s; }
   .phase.done .bar > i { background: var(--good); }
 
-  .tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin: 0 0 16px; }
+  .tabs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 0 0 16px; }
+  @media (max-width: 560px) { .tabs { grid-template-columns: repeat(3, 1fr); } }
   .tabs button {
     padding: 10px 2px; border-radius: 12px; border: 1px solid var(--line);
     background: var(--card); color: var(--ink); font: inherit; font-size: 12.5px; font-weight: 600;
@@ -191,6 +192,36 @@
   .slot.trade .kind { color: var(--muted); border-color: var(--line); }
   .day-full summary { font-size: 14px; font-weight: 600; padding: 10px 0; cursor: pointer; border-top: 1px solid var(--line); }
   .day-full .note { margin: 6px 0 10px; }
+  /* Learning tab */
+  .subtabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 0 0 4px; }
+  .subtabs button {
+    padding: 8px 2px; border-radius: 10px; border: 1px solid var(--line); background: var(--card);
+    color: var(--ink); font: inherit; font-size: 13px; font-weight: 600;
+  }
+  .subtabs button.on { background: var(--accent-soft); border-color: var(--accent); }
+  .learn-row .bar > i { background: var(--good); }
+  .alongside {
+    display: block; width: 100%; text-align: left; margin: 0 0 12px; padding: 9px 12px; border-radius: 10px;
+    border: 1px dashed var(--accent); background: var(--accent-soft); color: var(--ink); font: inherit; font-size: 13.5px; cursor: pointer;
+  }
+  .alongside b { color: var(--accent); }
+  .exp .res { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+  .exp .res b { color: var(--ink); font-weight: 600; }
+  .loop { margin: 0; padding-left: 20px; }
+  .loop li { margin: 6px 0; font-size: 14.5px; }
+  .ltip { font-size: 14px; color: var(--muted); margin: 8px 0 0; }
+  .logform { display: flex; gap: 8px; margin: 10px 0 4px; }
+  .logform input {
+    flex: 1; min-width: 0; padding: 10px; border-radius: 10px; border: 1px solid var(--line);
+    background: var(--card); color: var(--ink); font: inherit; font-size: 16px;
+  }
+  .logform button {
+    padding: 10px 16px; border-radius: 10px; border: 1px solid var(--ink); background: var(--ink);
+    color: var(--bg); font: inherit; font-size: 14px; font-weight: 600;
+  }
+  .logitem { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .logitem .d { flex: none; min-width: 48px; color: var(--muted); font-size: 12.5px; padding-top: 1px; font-variant-numeric: tabular-nums; }
+  .logitem .x { margin-left: auto; flex: none; border: none; background: none; color: var(--muted); font-size: 20px; line-height: 1; padding: 0 4px; cursor: pointer; }
   .confetti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 50; }
   .confetti i { position: absolute; top: -12px; width: 8px; height: 12px; border-radius: 2px; animation: fall linear forwards; }
   @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
@@ -213,6 +244,7 @@
     <div class="lvl"><div class="row"><span id="lvlName"></span><span id="lvlXp"></span></div><div class="bar"><i id="lvlBar"></i></div><div class="sub" id="lvlNext"></div></div>
     <div class="ahead" id="aheadLine"></div>
     <div class="lvl claude-row"><div class="row"><span id="clName"></span><span id="clCount"></span></div><div class="bar"><i id="clBar"></i></div><div class="sub">Gold badges in the path are Claude-specific items.</div></div>
+    <div class="lvl learn-row"><div class="row"><span id="lrName"></span><span id="lrCount"></span></div><div class="bar"><i id="lrBar"></i></div><div class="sub" id="lrSub"></div></div>
   </div>
 
   <div class="day" id="dayCard">
@@ -229,6 +261,7 @@
 
   <div class="tabs">
     <button class="on" data-tab="plan">Path</button>
+    <button data-tab="learn">Learning</button>
     <button data-tab="rewards">Rewards</button>
     <button data-tab="business">Business</button>
     <button data-tab="exp">Expertise</button>
@@ -244,6 +277,7 @@
       <li>Milestone gate passed: 50 XP</li>
       <li>Speed bonus: +5 XP for every day you beat the target (up to +200)</li>
       <li>Business step: 10 XP · Expertise item: 5 XP (projects and habits: 10 XP)</li>
+      <li>Learning tab: each lesson, chapter or maths unit 5 XP · each day you log a session 2 XP</li>
     </ul>
     <div id="rewardList"></div>
   </div></section>
@@ -268,6 +302,7 @@
           <li><b>The Executor is plain code, never an AI.</b> AI can watch, log and explain; it never places orders.</li>
           <li><b>No real money until 30 days on demo</b> with zero manual fixes.</li>
           <li><b>Use Google Colab for heavy work.</b> Your 8 GB laptop will struggle with ML.</li>
+          <li><b>Learning tab: Python and maths, day by day.</b> Each study block starts with 30 minutes of maths, then one Python session where you read a real piece of your backtester alongside Grus. Log one line after each session. It's kept separate from the milestones (they measure what you've built, it measures what you understand), and each milestone shows what to learn alongside it.</li>
           <li><b>Expertise tab:</b> deeper study at a lighter pace. It never blocks the build; it's the first thing to drop in a heavy week.</li>
           <li><b>Rest is risk management.</b> A compressed plan is a sprint, and burnout is the biggest threat to it. With a 3:00 AM start, lights out by 9:00 PM on work nights is a hard wall. Your daily schedule is in the card at the top, and it matches your Google Calendar.</li>
         </ol>
@@ -275,6 +310,25 @@
     </details>
     <div id="plan"></div>
   </section>
+
+  <section id="learnTab" class="hidden exp phase"><div class="body" style="padding-top:16px">
+    <p style="margin:0 0 12px;color:var(--muted)">Kept separate from the milestones on purpose: the milestones measure what you've built, and this tab measures what you understand. Each milestone shows what to learn alongside it.</p>
+    <div class="subtabs">
+      <button data-ltab="py">Python &amp; books</button>
+      <button data-ltab="math">Maths</button>
+      <button data-ltab="log">Session log</button>
+    </div>
+    <div id="learnPy"></div>
+    <div id="learnMath" class="hidden"></div>
+    <div id="learnLog" class="hidden">
+      <p class="ltip">After each session, write one line: what you read, what you learned, and the tweak you made. Over time it becomes a record of everything you've learned.</p>
+      <div class="logform">
+        <input id="logText" maxlength="300" placeholder="Read load_candles() · learned dictionaries · tweak: changed session start">
+        <button id="logAdd" type="button">Add</button>
+      </div>
+      <div id="logList"></div>
+    </div>
+  </div></section>
 
   <section id="fund" class="hidden fund phase"><div class="body" style="padding-top:16px">
     <p style="margin:0 0 12px;color:var(--muted)">Runs alongside the build. Your learning and building are compressed 2x, but the 3-year audited track record can't be sped up. That's why opening the account is step one of Milestone 1.</p>
@@ -288,7 +342,7 @@
   </div></section>
 
   <section id="exp" class="hidden exp phase"><div class="body" style="padding-top:16px">
-    <p style="margin:0;color:var(--muted)">The long game: everything you need to understand and run a world-class AI fund yourself, the kind that aims at Medallion and Citadel. Maths and theory run lightly alongside the build. The four blocks come after the core fund is running. None of it ever blocks the 14 milestones.</p>
+    <p style="margin:0;color:var(--muted)">The long game: everything you need to understand and run a world-class AI fund yourself, the kind that aims at Medallion and Citadel. Maths and theory run lightly alongside the build. The four blocks come after the core fund is running. None of it ever blocks the 14 milestones. Your from-scratch, day-by-day maths path is in the Learning tab; the courses below are the fuller versions it draws on.</p>
     <div id="expItems"></div>
     <p class="note">After this: the rest of Bishop (Ch. 2, 5–12) in Year 3 or during a master's.</p>
   </div></section>
@@ -667,14 +721,14 @@ const MILESTONES = [
 const EXPERTISE = [
   ["p1a", "The Data Movie: Data Literacy Explained Visually", "Data with Baraa · 1h 56m · big picture · Oct", "video"],
   ["p2b", "Everything About Calculus Explained Slowly", "Bub Explains · 2h 13m · late Oct", "video"],
-  ["p2l", "Essence of Linear Algebra — 3Blue1Brown", "Free YouTube series · ~3h · Nov · add it to your playlist", "video"],
+  ["p2l", "Essence of Linear Algebra — 3Blue1Brown", "Free YouTube series · ~3h · Maths Stage 2 in the Learning tab · add it to your playlist", "video"],
   ["v32", "Linear Algebra — Full College Course — freeCodeCamp", "11h 40m · go deeper after 3Blue1Brown.", "video"],
   ["v33", "Calculus 2 — Full College Course — freeCodeCamp", "6h 53m · series and integrals. Optional.", "video"],
   ["v5", "Mathematics for Machine Learning Tutorial (3 Complete Courses in 1 video) — My Lesson", "9h 26m · video companion to the MML book: linear algebra, calculus, probability.", "video"],
-  ["p4m", "Mathematics for Machine Learning — Deisenroth et al.", "Free · Ch. 2, 5, 6 (linear algebra, vector calculus, probability) · Dec–Feb", "book"],
+  ["p4m", "Mathematics for Machine Learning — Deisenroth et al.", "Free · Ch. 2, 5, 6 (linear algebra, vector calculus, probability) · Maths Stage 5 in the Learning tab", "book"],
   ["v35", "Learn To Write Math Proofs From Scratch — BriTheMathGuy", "2h 21m · the skill you'll need for Bishop and a master's.", "video"],
-  ["p4b1", "Pattern Recognition and Machine Learning — Bishop, Ch. 1", "Your book #3 begins · free PDF from Microsoft Research · ~Feb 2027", "book"],
-  ["p4b2", "Bishop, Ch. 3–4: linear models for regression and classification", "Alongside Milestone 8 · Feb–Apr 2027", "book"],
+  ["p4b1", "Pattern Recognition and Machine Learning — Bishop, Ch. 1", "Your book #3 begins · free PDF from Microsoft Research · start once Maths Stage 4 in the Learning tab is done (likely mid-2027)", "book"],
+  ["p4b2", "Bishop, Ch. 3–4: linear models for regression and classification", "After Ch. 1 · deepens the ML work from Milestone 8", "book"],
   ["fy5", "Bishop, Ch. 14 and 13", "Combining models (ties into boosting) and hidden Markov models (market regimes) · after Milestone 8", "book"],
 ];
 
@@ -781,6 +835,115 @@ const FUND = [
   ]},
 ];
 
+// ---------- Learning tab: Python through your backtester, the three books, and maths from scratch ----------
+// Separate from the milestones: milestones measure what you've built, this measures what you understand.
+// Grus page numbers are your PDF's page numbers (2nd edition).
+const PY_PHASES = [
+  { id: "lp1", title: "Phase 1 · Python through your backtester", book: "Data Science from Scratch — Joel Grus",
+    when: "Now → about January 2027",
+    intro: "Each lesson pairs one Grus section with one real piece of your backtester. Claude writes the code; your job is to read it, check it and know what a change will do.",
+    items: [
+      ["py0", "Step 0: Get the backtester's file map", "In the AI hedge fund project, ask Claude to list every file in the backtester, what each one does and the order they run in. Paste it into your study chat: it's your table of contents.", "do"],
+      ["py1", "Lesson 1: How Python reads code", "Whitespace, indentation and comments · Grus Ch 2, PDF p. 30–35 · practice: the win-counter quick check.", "lesson"],
+      ["py2", "Lesson 2: Modules and functions", "Grus Ch 2, PDF p. 35–37 · backtester: the imports at the top of a file, and one small helper function.", "lesson"],
+      ["py3", "Lesson 3: Strings, lists, tuples and dictionaries", "Grus Ch 2, PDF p. 37–46 (with exceptions, Counters and sets) · backtester: how one candle and one trade are stored.", "lesson"],
+      ["py4", "Lesson 4: Control flow and truthiness", "if / elif / else, for and while loops · Grus Ch 2, PDF p. 47–49 · backtester: the London / New York session filter.", "lesson"],
+      ["py5", "Lesson 5: Sorting, list comprehensions and testing", "Grus Ch 2, PDF p. 49–52 · backtester: sorting trades by time, and the tests that check your code.", "lesson"],
+      ["py6", "Lesson 6: Classes and type annotations", "Grus Ch 2, PDF p. 52–55 and 62 · backtester: the candle and trade structures.", "lesson"],
+      ["py7", "Lesson 7: Generators, randomness, zip, args and kwargs", "Grus Ch 2, PDF p. 55–62 · skim now; come back when you meet them in the code.", "lesson"],
+      ["py8", "Loading your candles and trade history from CSV", "Backtester: the loader function · variables, lists, dictionaries and modules working together.", "code"],
+      ["py9", "Results: your win rate and average R", "Milestone 1's Done-when · Grus Ch 5, PDF p. 92–97 · MT5 exports profit in dollars, so R also needs your risk on each trade (stop distance × lot size).", "code"],
+      ["py10", "BOS detection", "Backtester: loops over candles, comparisons, functions calling functions. The heart of your rulebook.", "code"],
+      ["py11", "Range and premium / discount", "Backtester: maths on lists · Grus Ch 4, PDF p. 81–91 (vectors and matrices).", "code"],
+      ["py12", "Drawdown, spread and distributions", "Grus Ch 5–6, PDF p. 97–122 (dispersion, correlation, probability) · ties to Milestone 4.", "code"],
+      ["py13", "Your equity curve chart", "Grus Ch 3, PDF p. 69–80 (matplotlib).", "code"],
+    ]},
+  { id: "lp2", title: "Phase 2 · Trading data science", book: "Machine Learning for Algorithmic Trading — Stefan Jansen (2nd ed.)",
+    when: "After Phase 1 · pull a chapter forward whenever a milestone needs it",
+    intro: "This is where you learn to check the backtester, not just read it. That's your CEO job: auditing what the agents build.",
+    items: [
+      ["jz1", "Market data and pandas", "Jansen Ch 2 · how market data is sourced, stored and cleaned.", "book"],
+      ["jz2", "Turning your rules into numbers a model can use", "Jansen Ch 4 · feature engineering and alpha factors: BOS, order blocks and zones as numbers.", "book"],
+      ["jz3", "Real or luck? Judging your results", "Jansen Ch 5 · performance evaluation: Sharpe ratio, drawdown, benchmarks.", "book"],
+      ["jz4", "How machine learning works, start to finish", "Jansen Ch 6 · the ML process, overfitting and cross-validation. Before Milestone 8.", "book"],
+      ["jz5", "Backtest traps: look-ahead bias and overfitting", "Jansen Ch 8 · the workflow from model to honest backtest. Read it early if Milestone 5 needs it.", "book"],
+    ]},
+];
+const SESSION_LOOP = [
+  ["Pick", "one small piece of the backtester: one function, about 20–40 lines."],
+  ["Paste", "it into your study chat on the tablet."],
+  ["Explain", "Claude breaks it down line by line and names each Python idea."],
+  ["Read", "the matching Grus section (page numbers are on each lesson)."],
+  ["Tweak", "change one small thing on your PC. Predict the result first, then run it. This is the step that proves you understand."],
+  ["Commit", "save it to Git with a note on what you learned, then log one line in the Session log."],
+];
+
+// Maths from scratch, about 30 minutes a day before the Python session. Roughly 9–10 months to Bishop.
+const MATH_STAGES = [
+  { id: "ms0", title: "Stage 0 · Foundations", when: "4–6 weeks at 30 min a day",
+    res: "Khan Academy: Pre-algebra and Algebra 1. Take each course challenge first, so you skip what you still remember.",
+    items: [
+      ["mt01", "Fractions, percentages and negative numbers", "Trading: % risk per trade · check it on your lot size calculator.", "unit"],
+      ["mt02", "Exponents and logarithms", "Trading: compounding, and why quants use log returns.", "unit"],
+      ["mt03", "Solving equations", "Trading: solve for lot size from your risk in dollars and your stop distance.", "unit"],
+      ["mt04", "Functions and graphs", "Trading: price over time, and your equity curve as a function.", "unit"],
+      ["mt05", "Sigma (Σ) notation", "Trading: adding up R across trades. Every stats formula is written this way.", "unit"],
+    ]},
+  { id: "ms1", title: "Stage 1 · Statistics and probability", when: "6–8 weeks",
+    res: "Khan Academy: Statistics and probability · Grus Ch 5–6 · feeds Milestones 1 and 4.",
+    items: [
+      ["mt11", "Mean, median and mode", "Trading: your average R, and why the median can tell a different story.", "unit"],
+      ["mt12", "Variance and standard deviation", "Trading: how spread out your R results are.", "unit"],
+      ["mt13", "Distributions and fat tails", "Trading: why gold has more huge days than a bell curve predicts.", "unit"],
+      ["mt14", "Basic probability and expectancy", "Trading: win rate × average win − loss rate × average loss.", "unit"],
+      ["mt15", "Samples and confidence: is my edge real?", "Trading: how many trades before your results mean something. Milestone 4's question.", "unit"],
+    ]},
+  { id: "ms2", title: "Stage 2 · Linear algebra", when: "6–8 weeks",
+    res: "3Blue1Brown, Essence of Linear Algebra · Khan Academy: Linear algebra · Grus Ch 4.",
+    items: [
+      ["p2l", "Essence of Linear Algebra — 3Blue1Brown", "Free YouTube series · ~3h · watch alongside the units below · also ticks in the Expertise tab", "video"],
+      ["mt21", "Vectors", "Trading: one candle is a row of numbers (open, high, low, close, volume).", "unit"],
+      ["mt22", "Matrices", "Trading: a whole dataset of candles is a matrix.", "unit"],
+      ["mt23", "Dot products and matrix multiplication", "Trading: how a model weighs and combines your features.", "unit"],
+    ]},
+  { id: "ms3", title: "Stage 3 · Calculus", when: "About 8 weeks",
+    res: "3Blue1Brown, Essence of Calculus · Khan Academy: Calculus 1 · Grus Ch 8.",
+    items: [
+      ["mt31", "Limits and derivatives", "Trading: rate of change, like the slope of your equity curve.", "unit"],
+      ["mt32", "Partial derivatives and gradients", "Which direction improves a model fastest.", "unit"],
+      ["mt33", "The chain rule", "How neural networks learn (backpropagation).", "unit"],
+      ["mt34", "Gradient descent", "Grus Ch 8, PDF p. 139 · models learn by walking downhill to reduce their error.", "unit"],
+      ["mt35", "Basic integrals", "Area under a curve · how probability works for smooth distributions.", "unit"],
+    ]},
+  { id: "ms4", title: "Stage 4 · Deeper probability", when: "About 6 weeks",
+    res: "Khan Academy: Probability · 3Blue1Brown on Bayes' theorem · Grus Ch 6, PDF p. 107–122.",
+    items: [
+      ["mt41", "Conditional probability", "Trading: your win rate in London vs. your win rate in New York.", "unit"],
+      ["mt42", "Bayes' rule", "Trading: updating your bias as price develops.", "unit"],
+      ["mt43", "Likelihood", "How a model judges which explanation fits the data best. Bishop is built on it.", "unit"],
+    ]},
+  { id: "ms5", title: "Stage 5 · Bridge to Bishop", when: "About 8 weeks",
+    res: "Mathematics for Machine Learning — Deisenroth, Faisal & Ong (free PDF from the authors).",
+    items: [
+      ["p4m", "Mathematics for Machine Learning — Deisenroth et al.", "Ch. 2, 5, 6 (linear algebra, vector calculus, probability) · also ticks in the Expertise tab", "book"],
+      ["mt51", "Practice: redo three of your stats as matrix maths", "Win rate, average R and one correlation, written with vectors in NumPy. Proof the pieces connect.", "do"],
+    ]},
+];
+const PY_ITEMS = PY_PHASES.flatMap(b => b.items);
+const MATH_ITEMS = MATH_STAGES.flatMap(b => b.items);
+const LEARN_ITEMS = PY_ITEMS.concat(MATH_ITEMS);
+
+// What to learn alongside each milestone (shown on the milestone card; tap it to open the Learning tab).
+const LEARN_LINKS = {
+  m1: "Python Step 0, Lessons 1–3 and Results (win rate, average R) · Maths Stage 0",
+  m2: "Python Lessons 4–8 · Maths Stages 0–1",
+  m3: "Python: BOS detection, range and premium / discount · Maths Stage 1",
+  m4: "Python: drawdown and distributions · Maths Stage 1 (samples and confidence)",
+  m5: "Python: equity curve · Jansen Ch 8 (backtest traps)",
+  m7: "Jansen Ch 5 (judging your results)",
+  m8: "Jansen Ch 4 and 6 · Maths Stages 2–3",
+};
+
 // ---------- 2. Tracks and saving ----------
 const TRACKS = [{ list: MILESTONES, el: "plan", num: i => `${i + 1}` }];
 const ALL = MILESTONES;
@@ -793,6 +956,7 @@ function save(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (
 let state = load();
 state._passed = state._passed || {};   // gate id -> date you passed it
 state._rewards = state._rewards || {}; // milestone id -> {r: reward, b: bonus reward}
+state._log = state._log || [];         // learning session log: [{d: date, t: text}]
 let openPhases = (state._open || []).filter(id => ALL.some(m => m.id === id));
 if (!openPhases.length) openPhases = ["m1"];
 
@@ -825,6 +989,9 @@ function totalXP() {
   xp += EXPERTISE.concat(CS_FOUNDATIONS).filter(it => state[it[0]]).length * 5;
   EXPERT_BLOCKS.forEach(b => b.items.forEach(it => { if (state[it[0]]) xp += it[3] === "do" ? 10 : 5; }));
   FUND.forEach(g => xp += g.items.filter(it => state[it[0]]).length * 10);
+  const expIds = new Set(EXPERTISE.map(it => it[0])); // shared items already counted above
+  xp += LEARN_ITEMS.filter(it => state[it[0]] && !expIds.has(it[0])).length * 5;
+  xp += new Set((state._log || []).map(x => x.d)).size * 2;
   return xp;
 }
 function levelOf(xp) {
@@ -872,6 +1039,7 @@ function milestoneHTML(m) {
       <div class="body">
         <p>${esc(m.intro)}</p>
         <div data-rline="${m.id}">${rewardLine(m)}</div>
+        ${LEARN_LINKS[m.id] ? `<button class="alongside" type="button">Learn alongside → <b>${esc(LEARN_LINKS[m.id])}</b></button>` : ""}
         <div class="cols">
           <div class="col build"><h3>Build</h3>${list(m.build)}</div>
           <div class="col learn"><h3>Learn for this</h3>${list(m.learn)}</div>
@@ -961,10 +1129,16 @@ function renderDay() {
   const m = MILESTONES.find(x => !state[x.gate[0]]);
   const nb = m && m.build.find(it => !state[it[0]]);
   const nl = (m && m.learn.find(it => !state[it[0]])) || EXPERTISE.find(it => !state[it[0]]);
+  const nm = MATH_ITEMS.find(it => !state[it[0]]), np = PY_ITEMS.find(it => !state[it[0]]);
   const where = m ? ` · Milestone ${numOf(m)}` : "";
+  const learnNext = [
+    nm ? `First 30 min, maths: <b>${esc(nm[1])}</b>` : "",
+    np ? `Then Python: <b>${esc(np[1])}</b>` : "",
+    nl ? `If you get stuck building: <b>${esc(nl[1])}</b>` : "",
+  ].filter(Boolean).join("<br>");
   const next = {
     build: !m ? "All milestones passed." : nb ? `Next: <b>${esc(nb[1])}</b>${where}` : `Next: <b>pass the gate</b>${where}`,
-    learn: nl ? `Next: <b>${esc(nl[1])}</b>. Keep building first and open this when you get stuck.` : "Everything ticked.",
+    learn: learnNext || "Everything ticked.",
   };
   const row = (s, j) => `<div class="slot ${s[4]}${j === i ? " now" : ""}">
       <div class="tm">${s[4] === "sleep" ? `${clock(s[0])} ${ampm(s[0])}` : span(s[0], s[1])}</div>
@@ -980,7 +1154,7 @@ function renderDay() {
   const w = WEEKDAY[winter ? "winter" : "summer"], f = friday(w), week = [w, w, w, w, f, SATURDAY, SUNDAY];
   const b = week.reduce((h, r) => h + hoursOf(r, "build"), 0), l = week.reduce((h, r) => h + hoursOf(r, "learn"), 0);
   document.getElementById("dayHours").textContent =
-    `Plan time: ${b} h backtesting + ${l} h study = ${b + l} h a week. The 2x pace needs about 30–35 h, so you have room to spare. About 3 h of the study time goes to the Expertise tab.`;
+    `Plan time: ${b} h backtesting + ${l} h study = ${b + l} h a week. The 2x pace needs about 30–35 h, so you have room to spare. Each study block starts with 30 minutes of maths from the Learning tab, and about 3 h a week goes to the Expertise tab.`;
 }
 setInterval(renderDay, 60000);
 
@@ -994,8 +1168,45 @@ function render() {
       <div class="bwhen">${esc(b.when)}</div>
       <p class="bintro">${esc(b.intro)}</p>${list(b.items)}</div>`).join("");
   document.getElementById("fundItems").innerHTML = FUND.map(g => `<h3>${esc(g.title)}</h3>${list(g.items)}`).join("");
+  renderLearning();
   renderRewards();
   updateProgress();
+}
+
+function renderLearning() {
+  const block = (b, extra) => `<div class="block">
+      <h3>${esc(b.title)} <span class="bcount" data-bcount="${b.id}"></span></h3>
+      <div class="bwhen">${esc(b.when)}</div>${extra}${list(b.items)}</div>`;
+  document.getElementById("learnPy").innerHTML =
+    `<details class="howto" ${state._log.length ? "" : "open"} style="margin-top:12px">
+       <summary class="ltip" style="cursor:pointer;color:var(--ink)"><b>How a learning session works</b> · 30 min maths, then one Python loop</summary>
+       <ol class="loop">${SESSION_LOOP.map(([k, v]) => `<li><b>${k}</b> ${esc(v)}</li>`).join("")}</ol>
+       <p class="ltip">One function per session. Reading code feels like understanding it; predicting what a change will do proves it. Ask "why" freely: any concept that doesn't click gets a visual and a few analogies.</p>
+     </details>` +
+    PY_PHASES.map(b => block(b, `<p class="res">Book: <b>${esc(b.book)}</b></p><p class="bintro">${esc(b.intro)}</p>`)).join("") +
+    `<div class="block"><h3>Phase 3 · The Pattern Learner</h3>
+       <div class="bwhen">Start once Maths Stage 4 is done (likely mid-2027)</div>
+       <p class="res">Book: <b>Pattern Recognition and Machine Learning — Christopher Bishop</b></p>
+       <p class="bintro">Graduate-level maths, so the Maths track comes first. Bishop's chapters are ticked in the Expertise tab: Ch. 1, then 3–4, then 14 and 13. Start when the agent's Pattern Learner is being built.</p></div>`;
+  document.getElementById("learnMath").innerHTML =
+    `<p class="ltip">From scratch, about 30 minutes a day before the Python session: roughly 9–10 months to be ready for Bishop. Practise every concept on your own trades, and link it to Python the same week (learn standard deviation, then calculate it on your R results).</p>` +
+    MATH_STAGES.map(b => block(b, `<p class="res">${esc(b.res)}</p>`)).join("");
+  renderLog();
+  showSub(state._ltab || "py");
+}
+
+function renderLog() {
+  const items = state._log.slice().reverse();
+  document.getElementById("logList").innerHTML = items.length
+    ? items.map(x => `<div class="logitem"><span class="d">${nice(x.d)}</span><span>${esc(x.t)}</span><button class="x" type="button" data-del="${state._log.indexOf(x)}" aria-label="Delete entry">×</button></div>`).join("")
+    : `<p class="note">No sessions logged yet.</p>`;
+}
+
+function showSub(k) {
+  state._ltab = k;
+  document.querySelectorAll(".subtabs button").forEach(b => b.classList.toggle("on", b.dataset.ltab === k));
+  [["py", "learnPy"], ["math", "learnMath"], ["log", "learnLog"]].forEach(([key, el]) =>
+    document.getElementById(el).classList.toggle("hidden", key !== k));
 }
 
 function statusOf(m) {
@@ -1061,6 +1272,17 @@ function updateProgress() {
   bc("base", EXPERTISE);
   bc("cs", CS_FOUNDATIONS);
   EXPERT_BLOCKS.forEach(b => bc(b.id, b.items));
+  PY_PHASES.concat(MATH_STAGES).forEach(b => bc(b.id, b.items));
+
+  const pyDone = PY_ITEMS.filter(it => state[it[0]]).length, mDone = MATH_ITEMS.filter(it => state[it[0]]).length;
+  const lDone = pyDone + mDone, lTotal = LEARN_ITEMS.length, days = new Set(state._log.map(x => x.d)).size;
+  const stage = MATH_STAGES.find(b => b.items.some(it => !state[it[0]]));
+  const np = PY_ITEMS.find(it => !state[it[0]]);
+  document.getElementById("lrName").innerHTML = `Learning · <b>${stage ? stage.title.split(" · ")[0] : "Maths done"}</b>`;
+  document.getElementById("lrCount").textContent = `Python ${pyDone}/${PY_ITEMS.length} · Maths ${mDone}/${MATH_ITEMS.length}`;
+  document.getElementById("lrBar").style.width = (lDone / lTotal * 100) + "%";
+  document.getElementById("lrSub").textContent =
+    `${np ? `Next Python: ${np[1]}` : "Python track done"} · ${plural(days, "day")} of sessions logged`;
 
   const xp = totalXP(), li = levelOf(xp), nextL = LEVELS[li + 1];
   document.getElementById("lvlName").innerHTML = `Level ${li + 1} · <b>${LEVELS[li][1]}</b>`;
@@ -1112,6 +1334,8 @@ function onTick(e) {
   if (!id) return;
   const levelBefore = levelOf(totalXP());
   state[id] = e.target.checked;
+  // Some items appear in two tabs (e.g. 3Blue1Brown linear algebra): keep every copy in step.
+  document.querySelectorAll(`input[data-id="${id}"]`).forEach(x => { x.checked = e.target.checked; });
   const m = ALL.find(x => x.gate[0] === id);
   if (m) {
     if (e.target.checked) state._passed[id] = today(); else delete state._passed[id];
@@ -1135,7 +1359,32 @@ function onTick(e) {
     setTimeout(() => { confetti(); toast(`Level up! You're now a ${LEVELS[levelAfter][1]}`, 3500); }, m && e.target.checked ? 4200 : 0);
   }
 }
-["plan", "fundItems", "expItems"].forEach(id => document.getElementById(id).addEventListener("change", onTick));
+["plan", "fundItems", "expItems", "learnPy", "learnMath"].forEach(id => document.getElementById(id).addEventListener("change", onTick));
+
+// Learning tab: sub-tabs, the session log, and the "Learn alongside" links on milestone cards.
+document.querySelectorAll(".subtabs button").forEach(b => b.onclick = () => { showSub(b.dataset.ltab); save(state); });
+function addLog() {
+  const input = document.getElementById("logText"), t = input.value.trim();
+  if (!t) { input.focus(); return; }
+  const levelBefore = levelOf(totalXP());
+  state._log.push({ d: today(), t });
+  save(state); input.value = "";
+  renderLog(); updateProgress();
+  toast(levelOf(totalXP()) > levelBefore ? `Level up! You're now a ${LEVELS[levelOf(totalXP())][1]}` : "Session logged");
+}
+document.getElementById("logAdd").onclick = addLog;
+document.getElementById("logText").addEventListener("keydown", e => { if (e.key === "Enter") addLog(); });
+document.getElementById("logList").addEventListener("click", e => {
+  const i = e.target.dataset.del;
+  if (i === undefined || !confirm("Delete this log entry?")) return;
+  state._log.splice(+i, 1);
+  save(state); renderLog(); updateProgress();
+});
+document.getElementById("plan").addEventListener("click", e => {
+  if (!e.target.closest(".alongside")) return;
+  showTab("learn"); showSub("py"); save(state);
+  document.querySelector(".tabs").scrollIntoView({ behavior: "smooth" });
+});
 
 document.getElementById("rewardList").addEventListener("input", e => {
   const mid = e.target.dataset.reward;
@@ -1152,11 +1401,12 @@ document.getElementById("rewardList").addEventListener("input", e => {
   save(state);
 }, true));
 
-const TABS = { plan: "planTab", rewards: "rewards", business: "fund", exp: "exp", parked: "parked" };
-document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
-  document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b));
-  Object.entries(TABS).forEach(([k, el]) => document.getElementById(el).classList.toggle("hidden", k !== b.dataset.tab));
-});
+const TABS = { plan: "planTab", learn: "learnTab", rewards: "rewards", business: "fund", exp: "exp", parked: "parked" };
+function showTab(k) {
+  document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x.dataset.tab === k));
+  Object.entries(TABS).forEach(([key, el]) => document.getElementById(el).classList.toggle("hidden", key !== k));
+}
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => showTab(b.dataset.tab));
 
 // The progress code carries ticks, pass dates and your rewards.
 document.getElementById("exportBtn").onclick = async () => {
@@ -1178,13 +1428,14 @@ document.getElementById("importBtn").onclick = () => {
     }
     state._passed = state._passed || {};
     state._rewards = state._rewards || {};
+    state._log = state._log || [];
     save(state); render(); toast("Progress loaded");
   } catch (e) { toast("That code didn't work"); }
 };
 
 document.getElementById("resetBtn").onclick = () => {
-  if (confirm("Untick everything and clear rewards?")) {
-    state = { _passed: {}, _rewards: {} }; openPhases = ["m1"]; save(state); render();
+  if (confirm("Untick everything, clear rewards and clear your session log?")) {
+    state = { _passed: {}, _rewards: {}, _log: [] }; openPhases = ["m1"]; save(state); render();
   }
 };
 
