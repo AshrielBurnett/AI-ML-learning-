@@ -509,7 +509,7 @@
 // Each item: [permanent id, title, details, kind]. Kinds: build, do, video, book.
 // Ids never change, so your ticks stay saved when the plan is updated.
 const MILESTONES = [
-  { id: "m1", title: "Set up and start the clock", when: "Week 1", target: "2026-10-18",
+  { id: "m1", title: "Set up and start the clock", when: "Week 1", target: "2026-10-28",
     intro: "Get your tools working and start the one thing that can't be sped up: an auditable track record.",
     build: [
       ["fa1", "Open an auditable trading account on real capital", "In your own name, with money you can afford, at a broker with clean, verifiable statements. Prop-firm accounts don't count as a track record: keep them running for income and trade this one alongside. Get professional advice on the setup. Submitting the application counts for this week; approval can take longer.", "do"],
@@ -533,7 +533,7 @@ const MILESTONES = [
     ],
     gate: ["p0g", "Your trade history loads in Python and prints your win rate and average R, and the code is on GitHub."] },
 
-  { id: "m2", title: "Journal agent: your first AI agent", when: "Weeks 1–3", target: "2026-10-29",
+  { id: "m2", title: "Journal agent: your first AI agent", when: "Weeks 1–3", target: "2026-11-08",
     intro: "Your first live piece of the system and your first real AI agent: a model that calls tools in a loop until the job is done. Useful to your trading from day one, and the first piece of your agency portfolio.",
     build: [
       ["m2a", "Connect Python to MT5", "Using the MetaTrader5 Python package.", "build"],
@@ -559,7 +559,7 @@ const MILESTONES = [
     ],
     gate: ["p5g", "Every closed MT5 trade lands in your journal with no manual typing for 2 straight weeks, plus an AI weekly summary — and the agent uses at least two tools to correctly answer 10 questions about your trades. → Journal module v1."] },
 
-  { id: "m3", title: "Formalise your edge", when: "Weeks 2–5", target: "2026-11-12", key: "Flagship",
+  { id: "m3", title: "Formalise your edge", when: "Weeks 2–5", target: "2026-11-22", key: "Flagship",
     intro: "Write your price action as rules so precise that two people (or a computer) would always agree on the same chart. Worth more than any course.",
     build: [
       ["pf1", "Write the break of structure (BOS) definition", "Swing point, lookback, what confirms the break. No room for interpretation.", "build"],
@@ -582,7 +582,7 @@ const MILESTONES = [
     ],
     gate: ["pfg", "A written, versioned rulebook plus code that reproduces at least 80% of your own BOS/POI calls, and a list of the cases where your judgment beats the rules."] },
 
-  { id: "m4", title: "Is your edge real?", when: "Weeks 4–6", target: "2026-11-19", key: "Most important",
+  { id: "m4", title: "Is your edge real?", when: "Weeks 4–6", target: "2026-11-29", key: "Most important",
     intro: "Statistics is how you tell edge from luck. Your trade log is a sample; this milestone tells you what it actually proves.",
     build: [
       ["m4a", "Compute your core stats", "Win rate, average R, expectancy, t-statistic and a confidence interval on your edge.", "build"],
@@ -600,7 +600,7 @@ const MILESTONES = [
     info: [["Watch for", "Multiple testing: try 200 variants and ~10 will look brilliant by pure chance."]],
     gate: ["p2g", "A one-page answer: is your edge statistically real, how many more trades until you'd know for sure, and what's the worst drawdown you should expect?"] },
 
-  { id: "a2", title: "Agent design patterns", when: "Weeks 4–7", target: "2026-11-26",
+  { id: "a2", title: "Agent design patterns", when: "Weeks 4–7", target: "2026-12-06",
     intro: "Most good \"agents\" are really workflows: fixed steps where the model does the thinking. Learn when to use which, and the five patterns that cover most real systems.",
     build: [
       ["a2a", "Prompt chain: news → summary → impact on gold", "Each step's output feeds the next.", "build"],
@@ -620,7 +620,7 @@ const MILESTONES = [
     ],
     gate: ["a2g", "Three working patterns on real trading tasks, each with a written note on why it's a workflow or an agent."] },
 
-  { id: "m5", title: "Honest backtest", when: "Weeks 5–8", target: "2026-12-03",
+  { id: "m5", title: "Honest backtest", when: "Weeks 5–8", target: "2026-12-13",
     intro: "Run your coded rules on history without fooling yourself. Most amateur backtests are quietly invalid.",
     build: [
       ["p3e", "Build an event-driven backtester", "Bar by bar, order by order, as reality delivered it. Slower than vectorised, but honest.", "build"],
@@ -639,7 +639,7 @@ const MILESTONES = [
     info: [["Bias killers", "Look-ahead bias, survivorship bias, point-in-time data. Be able to name and defend against all three."]],
     gate: ["p3g", "Your rules backtested event-driven on 2+ years with costs, walk-forward tested, and still profitable at 2x costs."] },
 
-  { id: "a3", title: "Claude Code, MCP and skills", when: "Weeks 6–9", target: "2026-12-10",
+  { id: "a3", title: "Claude Code, MCP and skills", when: "Weeks 6–9", target: "2026-12-20",
     intro: "MCP (Model Context Protocol) is the standard way to plug your own data and tools into any AI app. Skills and sub-agents make Claude Code work your way.",
     build: [
       ["a3a", "Build an MCP server for your trading data", "Read-only: journal, candles, stats. Claude can query them; it can never place orders.", "build"],
@@ -662,7 +662,7 @@ const MILESTONES = [
     ],
     gate: ["a3g", "Claude answers \"how did my London-session trades do this month?\" by calling your own MCP server."] },
 
-  { id: "m6", title: "Automated on demo", when: "Weeks 8–10", target: "2026-12-20",
+  { id: "m6", title: "Automated on demo", when: "Weeks 8–10", target: "2026-12-30",
     intro: "The system trades by itself on a demo account. This is your AI hedge fund's first working version. Start the 30-day demo run as soon as it works.",
     build: [
       ["m6a", "Executor: place orders on an MT5 demo from your coded rules", "Plain code, never an AI.", "build"],
@@ -682,7 +682,7 @@ const MILESTONES = [
     info: [["Agent design", "Milestone 7 (MCP and skills) comes just before this, and the multi-agent research desk (milestone 9) right after it."]],
     gate: ["p6g", "The full pipeline (data → signal → risk sizing → order → journal) runs unattended on demo, and its 30-day clean run has started."] },
 
-  { id: "a4", title: "Multi-agent research desk", when: "Weeks 10–13", target: "2027-01-07",
+  { id: "a4", title: "Multi-agent research desk", when: "Weeks 10–13", target: "2027-01-17",
     intro: "Several specialist agents coordinated by an orchestrator. Powerful, and easy to over-build: add an agent only when one can't do the job well.",
     build: [
       ["a4a", "Pre-session research desk", "An orchestrator plus news, chart and risk-check agents that brief you before London open. Becomes your Observer + Analyst.", "build"],
@@ -704,7 +704,7 @@ const MILESTONES = [
     ],
     gate: ["a4g", "The research desk delivers a useful briefing before 5 sessions in a row, with every agent's work logged."] },
 
-  { id: "m7", title: "Small real capital + tear sheet", when: "Weeks 11–15", target: "2027-01-24",
+  { id: "m7", title: "Small real capital + tear sheet", when: "Weeks 11–15", target: "2027-02-03",
     intro: "Go live small, measure everything, and produce the report an investor would ask for.",
     build: [
       ["m7c", "Finish 30 clean days on demo", "Zero manual fixes. This is market time, so it doesn't compress — build the other pieces while it runs.", "do"],
@@ -722,7 +722,7 @@ const MILESTONES = [
     ],
     gate: ["prg", "A first tear sheet: monthly returns, drawdown chart, key metrics, and one paragraph on who loses this money to you and why."] },
 
-  { id: "a5", title: "Production-grade agents", when: "Weeks 13–16", target: "2027-01-28",
+  { id: "a5", title: "Production-grade agents", when: "Weeks 13–16", target: "2027-02-07",
     intro: "The difference between a demo and something a client pays for: you can prove it works, see what it did, know what it costs, and it fails safely.",
     build: [
       ["a5a", "Build an eval set", "30 real questions with correct answers for your Journal/Analyst agent, scored automatically after every change.", "build"],
@@ -744,7 +744,7 @@ const MILESTONES = [
     ],
     gate: ["a5g", "Your agents pass at least 90% of the eval set, every run is traced, and you know the cost per run."] },
 
-  { id: "a6", title: "Launch the agency", when: "Weeks 12–22", target: "2027-03-14",
+  { id: "a6", title: "Launch the agency", when: "Weeks 12–22", target: "2027-03-24",
     intro: "Sell outcomes, not \"AI\". One niche, one painful problem, one fixed-price offer — then deliver it so well the case study sells the next client.",
     build: [
       ["a6a", "Pick one niche and one painful problem", "Ideas: prop-firm traders, oil & gas service companies (your Halliburton background), or local Guyanese businesses.", "do"],
@@ -766,7 +766,7 @@ const MILESTONES = [
     ],
     gate: ["a6g", "One paying client delivered, with a case study you can show the next prospect."] },
 
-  { id: "m8", title: "ML layer: meta-labelling", when: "Weeks 16–28", target: "2027-04-22",
+  { id: "m8", title: "ML layer: meta-labelling", when: "Weeks 16–28", target: "2027-05-02",
     intro: "Your rules pick the direction; ML only decides whether to take the trade and how big. Validation matters more than the model.",
     build: [
       ["p4d", "Practise scikit-learn and gradient boosting (XGBoost / LightGBM)", "Boosted trees beat deep learning on this kind of data.", "build"],
@@ -785,7 +785,7 @@ const MILESTONES = [
     ],
     gate: ["p4g", "Write your expected out-of-sample Sharpe before looking at the test set, then compare. The model improves results on data it never saw. → Pattern Learner v1."] },
 
-  { id: "a7", title: "Structure and scale the agency", when: "Weeks 22–33", target: "2027-05-30",
+  { id: "a7", title: "Structure and scale the agency", when: "Weeks 22–33", target: "2027-06-09",
     intro: "Turn freelancing into a business: recurring revenue, documented systems, and agents that run your own back office.",
     build: [
       ["a7a", "Agency operating system", "CRM, proposal template, contracts (reviewed by a lawyer), invoicing.", "build"],
