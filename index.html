@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AI Fund Build Plan</title>
 
@@ -1736,6 +1737,18 @@ document.getElementById("tvLogAdd").onclick = addTodayLog;
 document.getElementById("tvLog").addEventListener("keydown", e => { if (e.key === "Enter") addTodayLog(); });
 document.getElementById("toFull").onclick = () => showView("full");
 document.getElementById("toToday").onclick = () => { renderToday(); showView("today"); };
+
+// Auto-update: when the app opens or comes back to the front, check for a newer version and load it.
+const APP_VERSION = "2026-10-21b";
+async function checkForUpdate() {
+  try {
+    const r = await fetch("index.html?check=" + Date.now(), { cache: "no-store" });
+    const m = (await r.text()).match(/const APP_VERSION = "([^"]+)"/);
+    if (m && m[1] !== APP_VERSION) location.replace("index.html?v=" + m[1]);
+  } catch (e) {}
+}
+checkForUpdate();
+document.addEventListener("visibilitychange", () => { if (!document.hidden) checkForUpdate(); });
 
 render();
 showView("today");
