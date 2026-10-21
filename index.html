@@ -225,10 +225,99 @@
   .confetti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 50; }
   .confetti i { position: absolute; top: -12px; width: 8px; height: 12px; border-radius: 2px; animation: fall linear forwards; }
   @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+
+  /* ---------- Today view ---------- */
+  :root { --must: #c8372d; --must-soft: #fdeeec; --must-ink: #8c231b; }
+  @media (prefers-color-scheme: dark) { :root { --must: #ff6b5e; --must-soft: #2e1513; --must-ink: #ffb3ab; } }
+  #todayView { max-width: 620px; margin: 0 auto; }
+  .tv-head { margin: 12px 0 18px; }
+  .tv-date { font-size: 13px; color: var(--muted); font-weight: 600; letter-spacing: .02em; }
+  .tv-head h1 { font-size: 30px; line-height: 1.15; margin: 2px 0 6px; letter-spacing: -0.02em; }
+  .tv-window { font-size: 14px; color: var(--muted); }
+  .tv-phase { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); margin: 0 0 18px; }
+  .tv-phase b { color: var(--ink); font-weight: 600; }
+  .tv-phase .bar { flex: 1; margin: 0; height: 6px; }
+  .tv-label { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 8px; color: var(--muted); }
+  .tv-must .tv-label { color: var(--must); }
+  .tv-sec { margin-top: 22px; }
+  .ti { display: flex; gap: 12px; align-items: flex-start; background: var(--card); border: 1px solid var(--line);
+        border-radius: 14px; padding: 14px; margin-bottom: 8px; cursor: pointer; }
+  .ti input { display: none; }
+  .ti .box { margin-top: 2px; flex: none; }
+  .ti input:checked + .box { background: var(--good); border-color: var(--good); }
+  .ti input:checked + .box::after { content: ""; width: 6px; height: 11px; border: solid #fff; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg) translate(-1px,-1px); }
+  .ti-body { min-width: 0; flex: 1; }
+  .ti-top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .chip { font-size: 11px; font-weight: 700; letter-spacing: .03em; padding: 2px 8px; border-radius: 99px;
+          background: var(--learn); color: var(--muted); border: 1px solid var(--line); }
+  .ti-min { font-size: 12px; color: var(--muted); }
+  .ti-carry { font-size: 11px; font-weight: 700; color: var(--accent); }
+  .ti-t { font-weight: 600; font-size: 16px; line-height: 1.35; }
+  .ti-d { font-size: 13.5px; color: var(--muted); margin-top: 3px; line-height: 1.45; }
+  .ti input:checked ~ .ti-body .ti-t { text-decoration: line-through; color: var(--muted); }
+  .ti.must { border: 2px solid var(--must); background: var(--must-soft); padding: 16px; }
+  .ti.must .ti-t { font-size: 18px; }
+  .ti.must .box { border-color: var(--must); }
+  .ti.must.done { border-color: var(--good); background: var(--good-soft); }
+  .tv-must-done { font-size: 13px; color: var(--good); font-weight: 600; margin: 2px 0 0; }
+  .tv-total { font-size: 13px; color: var(--muted); margin: 4px 2px 0; }
+  .tv-btn { width: 100%; padding: 13px; border-radius: 12px; border: 1px solid var(--line); background: var(--card);
+            color: var(--ink); font: inherit; font-size: 15px; font-weight: 600; margin-top: 4px; cursor: pointer; }
+  .tv-btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .tv-log { display: flex; gap: 8px; }
+  .tv-log input { flex: 1; min-width: 0; padding: 12px; border-radius: 12px; border: 1px solid var(--line);
+                  background: var(--card); color: var(--ink); font: inherit; font-size: 15px; }
+  .tv-log button { padding: 0 16px; border-radius: 12px; border: none; background: var(--ink); color: var(--bg); font: inherit; font-weight: 600; }
+  .tv-logged { font-size: 13px; color: var(--good); margin-top: 6px; }
+  .tv-next summary { cursor: pointer; font-size: 14px; color: var(--muted); padding: 6px 0; }
+  .tv-up { display: flex; gap: 10px; justify-content: space-between; padding: 10px 2px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+  .tv-up span:last-child { flex: none; font-size: 12px; }
+  .tv-switch { display: block; width: 100%; margin: 28px 0 0; padding: 12px; background: none; border: none;
+               color: var(--muted); font: inherit; font-size: 14px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .tv-allclear { text-align: center; background: var(--good-soft); color: var(--good); border-radius: 14px; padding: 16px; font-weight: 600; margin-bottom: 8px; }
+  .fv-back { background: none; border: none; color: var(--ink); font: inherit; font-size: 15px; font-weight: 600; padding: 8px 0; cursor: pointer; }
 </style>
 </head>
 <body>
 <div class="wrap">
+  <div id="todayView">
+    <header class="tv-head">
+      <div class="tv-date" id="tvDate"></div>
+      <h1>Today</h1>
+      <div class="tv-window" id="tvWindow"></div>
+    </header>
+    <div class="tv-phase" id="tvPhase"></div>
+
+    <div class="tv-must">
+      <div class="tv-label">Must do today</div>
+      <div id="tvMust"></div>
+    </div>
+
+    <div class="tv-sec">
+      <div class="tv-label">Then, if there's time</div>
+      <div id="tvList"></div>
+      <div id="tvMore"></div>
+    </div>
+
+    <div class="tv-sec">
+      <div class="tv-label">Before you finish</div>
+      <div class="tv-log">
+        <input id="tvLog" maxlength="300" placeholder="One line: what you learned today">
+        <button id="tvLogAdd" type="button">Log</button>
+      </div>
+      <div class="tv-logged" id="tvLogged"></div>
+    </div>
+
+    <details class="tv-sec tv-next">
+      <summary>Coming up next</summary>
+      <div id="tvUp"></div>
+    </details>
+
+    <button class="tv-switch" id="toFull" type="button">Full plan, milestones and rewards</button>
+  </div>
+
+  <div id="fullView" class="hidden">
+  <button class="fv-back" id="toToday" type="button">‹ Today</button>
   <header>
     <h1>AI Hedge Fund & Agents Plan</h1>
     <p>2x compressed pace · one path: hedge fund system + AI agents + agency + Claude mastery · build first, learn what each step needs</p>
@@ -254,7 +343,7 @@
     <details class="day-full">
       <summary id="daySummary">Today's full schedule</summary>
       <div id="dayList"></div>
-      <p class="note"><b>Summer and winter times switch by themselves.</b> From late October to late March (UK winter time), London opens at 4:00 am your time and New York an hour later, so the app shows your winter day: London 4:00–6:00, gym after Bible study, New York 9:00 am–12:30 pm. Your Google Calendar has both sets.</p>
+      <p class="note"><b>Summer and winter times switch by themselves.</b> From late October to late March (UK winter time), London opens at 4:00 am your time and New York an hour later, so the app shows your winter day: London 4:00–6:00, gym 6:00–7:00, reading 7:00–9:00, New York 9:00 am–12:30 pm. Study stays 3:30–7:30 pm. Your Google Calendar has both sets.</p>
       <p class="note"><b>Sleep:</b> 9:00 pm to 3:00 am is 6 hours, which is the minimum, not the target. If you feel foggy, take a 20-minute nap in the lunch break.</p>
     </details>
   </div>
@@ -314,7 +403,7 @@
   <section id="learnTab" class="hidden exp phase"><div class="body" style="padding-top:16px">
     <p style="margin:0 0 12px;color:var(--muted)">Kept separate from the milestones on purpose: the milestones measure what you've built, and this tab measures what you understand. Each milestone shows what to learn alongside it.</p>
     <div class="subtabs">
-      <button data-ltab="py">Python &amp; books</button>
+      <button data-ltab="py">Path &amp; books</button>
       <button data-ltab="math">Maths</button>
       <button data-ltab="log">Session log</button>
     </div>
@@ -411,6 +500,7 @@
     <button id="resetBtn">Reset</button>
   </div>
   <p class="note">Progress saves on each device separately. To move it from iPad to iPhone, tap “Copy progress code” on one and “Paste progress code” on the other.</p>
+  </div>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -929,7 +1019,90 @@ const MATH_STAGES = [
       ["mt51", "Practice: redo three of your stats as matrix maths", "Win rate, average R and one correlation, written with vectors in NumPy. Proof the pieces connect.", "do"],
     ]},
 ];
-const PY_ITEMS = PY_PHASES.flatMap(b => b.items);
+// ---------- The learning path: one sequence, in order ----------
+// Each item: [permanent id, title, details, kind, minutes]. Ids never change, so ticks stay saved.
+// Kinds: do, lesson (Python), code (read a piece of the backtester), book, video.
+// Maths runs alongside every day for 30 minutes (MATH_STAGES), so it isn't in this list.
+const PATH = [
+  { id: "ph1", n: 1, title: "Read the code", when: "Now → about January 2027",
+    goal: "Read your backtester line by line and know what each part does to your candles.",
+    books: "Grus (Data Science from Scratch) · McKinney (Python for Data Analysis) · Guttag (testing chapter only)",
+    items: [
+      ["py0", "Get the backtester's file map", "In the AI hedge fund project, ask Claude to list every backtester file, what each does and the order they run in. Paste it into your study chat: it's your table of contents.", "do", 30],
+      ["py1", "How Python reads code", "Whitespace, indentation and comments · Grus Ch 2, PDF p. 30–35 · practice: the win-counter check.", "lesson", 60],
+      ["py2", "Modules and functions", "Grus Ch 2, PDF p. 35–37 · in your code: the imports at the top of a file and one small helper function.", "lesson", 60],
+      ["py3", "Strings, lists, tuples and dictionaries", "Grus Ch 2, PDF p. 37–46 · in your code: how one candle and one trade are stored.", "lesson", 90],
+      ["bk1", "NumPy: fast maths on whole columns", "McKinney Ch 4 · why your code does maths on 10,000 candles at once instead of one at a time.", "book", 90],
+      ["py4", "Control flow: if, elif, else and loops", "Grus Ch 2, PDF p. 47–49 · in your code: the London / New York session filter.", "lesson", 60],
+      ["py5", "Sorting, list comprehensions and tests", "Grus Ch 2, PDF p. 49–52 · in your code: sorting trades by time, and the tests that check it.", "lesson", 60],
+      ["bk2", "pandas: Series and DataFrames", "McKinney Ch 5 · your candles live in a DataFrame. Learn to select rows, columns and time ranges.", "book", 120],
+      ["py6", "Classes and type annotations", "Grus Ch 2, PDF p. 52–55 and 62 · in your code: the candle and trade structures.", "lesson", 60],
+      ["py7", "Generators, randomness, zip, args and kwargs", "Grus Ch 2, PDF p. 55–62 · skim now; come back when you meet them in the code.", "lesson", 45],
+      ["py8", "Loading your candles and trades from CSV", "Read the loader function · variables, lists, dictionaries and modules working together.", "code", 90],
+      ["bk3", "Testing and debugging", "Guttag, Testing and Debugging chapter (Ch 6) · a silent bug looks exactly like profit. Learn how to catch one.", "book", 90],
+      ["py9", "Results: your win rate and average R", "Grus Ch 5, PDF p. 92–97 · read the results code and check one number by hand against your journal.", "code", 90],
+      ["py10", "BOS detection", "The heart of your rulebook · loops over candles, comparisons, functions calling functions. Check 5 BOS calls against your own chart.", "code", 120],
+      ["bk4", "Time series in pandas", "McKinney Ch 11 · timestamps, time zones and resampling 1M candles into 5M and 1H. Exactly what your sessions and timeframes need.", "book", 120],
+      ["py11", "Range and premium / discount", "Read the range code · Grus Ch 4, PDF p. 81–91 (vectors) shows the maths underneath.", "code", 90],
+      ["py13", "Your equity curve chart", "Grus Ch 3, PDF p. 69–80 (matplotlib) · read the chart code, then change one thing and predict the result.", "code", 60],
+    ]},
+  { id: "ph2", n: 2, title: "Is the result real?", when: "About Jan → Apr 2027",
+    goal: "Tell real edge from luck, and catch the ways a backtest lies.",
+    books: "Think Stats · Jansen (ML for Algorithmic Trading) · López de Prado (Advances in Financial ML)",
+    items: [
+      ["ts1", "Exploring data and distributions", "Think Stats Ch 1–2 · look at your R results as a distribution, not a single average.", "book", 90],
+      ["ts2", "PMFs and CDFs", "Think Stats Ch 3–4 · answer \"what share of my trades lose more than 1R?\" from a chart.", "book", 90],
+      ["py12", "Drawdown, spread and distributions in your code", "Grus Ch 5–6, PDF p. 97–122 · read the drawdown code and check the worst drawdown by hand.", "code", 90],
+      ["ts3", "Modelling distributions and fat tails", "Think Stats Ch 5–6 · why gold and NAS100 have more huge days than a bell curve predicts.", "book", 120],
+      ["ts4", "Relationships between variables", "Think Stats Ch 7 · correlation: does your session or instrument change your R?", "book", 60],
+      ["ts5", "Estimation and confidence", "Think Stats Ch 8 · how sure can you be of your win rate after 50 trades? After 200?", "book", 90],
+      ["ts6", "Hypothesis testing: is my edge luck?", "Think Stats Ch 9 · run the test on your own trade log.", "book", 90],
+      ["jz1", "Market data and pandas", "Jansen Ch 2 · how market data is sourced, stored and cleaned.", "book", 90],
+      ["jz3", "Judging results: Sharpe, drawdown, benchmarks", "Jansen Ch 5 · the numbers a fund is judged on.", "book", 120],
+      ["jz5", "Backtest traps: look-ahead bias and overfitting", "Jansen Ch 8 · the number one way a backtester lies. Then ask Claude Code to check yours for look-ahead bias.", "book", 120],
+      ["ts7", "Time series analysis", "Think Stats Ch 12 · trends, moving averages and autocorrelation in price data.", "book", 90],
+      ["ldp1", "Why finance is different for ML", "López de Prado Ch 1 · the big picture of the book. Short, read it straight through.", "book", 45],
+      ["ldp2", "The dangers of backtesting", "López de Prado Ch 11 · the seven sins of backtesting. Check your own backtester against each one.", "book", 90],
+      ["ldp3", "Backtest statistics", "López de Prado Ch 14 · the stats a serious fund reports, and the deflated Sharpe ratio.", "book", 120],
+      ["ldp4", "Understanding strategy risk", "López de Prado Ch 15 · how win rate and payoff combine into the risk of failure.", "book", 90],
+    ]},
+  { id: "ph3", n: 3, title: "The Pattern Learner", when: "About mid-2027",
+    goal: "Teach the agent to learn your setups, without fooling yourself.",
+    books: "Grus · Jansen · Géron (Hands-On ML) · An Introduction to Statistical Learning · López de Prado",
+    items: [
+      ["bk5", "What machine learning is", "Grus Ch 11 · overfitting, underfitting and the bias-variance trade-off in plain words.", "book", 90],
+      ["jz4", "The ML process, start to finish", "Jansen Ch 6 · the workflow, overfitting and cross-validation.", "book", 120],
+      ["ge1", "The machine learning landscape", "Géron Ch 1 · types of ML and the main ways it goes wrong.", "book", 90],
+      ["ge2", "An end-to-end ML project", "Géron Ch 2 · follow along in Colab. The template for every model you'll build.", "book", 180],
+      ["isl1", "Statistical learning and cross-validation", "An Introduction to Statistical Learning Ch 2 and 5 (free at statlearning.com). The easier version of Elements of Statistical Learning on your shelf.", "book", 120],
+      ["jz2", "Turning your rules into features", "Jansen Ch 4 · BOS, zones and sessions as numbers a model can use.", "book", 120],
+      ["ldp5", "Labelling: the triple-barrier method", "López de Prado Ch 3 · how to label each setup as a win or loss the right way. Includes meta-labelling.", "book", 120],
+      ["ldp6", "Sample weights", "López de Prado Ch 4 · why overlapping trades fool a model, and the fix.", "book", 90],
+      ["ge3", "Classification", "Géron Ch 3 · predicting win or loss, and precision vs. recall.", "book", 120],
+      ["isl2", "Classification, the statistics behind it", "ISL Ch 4 · logistic regression explained properly.", "book", 90],
+      ["ldp7", "Cross-validation in finance", "López de Prado Ch 7 · purged k-fold. Normal cross-validation leaks the future in trading data.", "book", 90],
+      ["ge4", "Decision trees and random forests", "Géron Ch 6–7 · the workhorse models for tabular trading data.", "book", 150],
+      ["isl3", "Tree-based methods", "ISL Ch 8 · why forests and boosting work.", "book", 90],
+      ["ldp8", "Feature importance", "López de Prado Ch 8 · which of your features actually matter.", "book", 90],
+      ["ldp9", "Bet sizing", "López de Prado Ch 10 · turning a model's confidence into position size.", "book", 90],
+      ["bd1", "Build: a first model on your labelled setups", "With Claude Code: predict whether a valid setup wins, using purged cross-validation. You review every line.", "do", 240],
+    ]},
+  { id: "ph4", n: 4, title: "Depth and scale", when: "Late 2027 onward",
+    goal: "The PhD-level depth behind everything you've used, and running it at scale.",
+    books: "Géron Part 2 · Goodfellow (Deep Learning) · Bishop · Elements of Statistical Learning · Understanding ML Theory · Mining of Massive Datasets",
+    items: [
+      ["ge5", "Neural networks with Keras", "Géron, first neural network chapter of Part 2 (Ch 10).", "book", 150],
+      ["dl1", "The maths behind deep learning", "Goodfellow Part 1, Ch 2–4 · linear algebra, probability and numerical computation, as a check on your maths.", "book", 240],
+      ["dl2", "Machine learning basics, the deep version", "Goodfellow Ch 5.", "book", 180],
+      ["p4b1", "Bishop Ch 1", "Pattern Recognition and Machine Learning begins · probability theory and model selection.", "book", 240],
+      ["p4b2", "Bishop Ch 3–4: linear models", "Regression and classification, the probabilistic view.", "book", 240],
+      ["es1", "Model assessment and selection", "Elements of Statistical Learning Ch 7 · the full version of what ISL taught you.", "book", 180],
+      ["ldp10", "Backtesting through cross-validation and synthetic data", "López de Prado Ch 12–13.", "book", 150],
+      ["um1", "Why learning works at all", "Understanding Machine Learning Ch 2–3 · PAC learning. Master's-level theory.", "book", 180],
+      ["mm1", "Data at scale", "Mining of Massive Datasets Ch 1–2 · for when you run many brokers, accounts and years of tick data.", "book", 150],
+    ]},
+];
+const PY_ITEMS = PATH.flatMap(b => b.items); // the path, in order
 const MATH_ITEMS = MATH_STAGES.flatMap(b => b.items);
 const LEARN_ITEMS = PY_ITEMS.concat(MATH_ITEMS);
 
@@ -1057,48 +1230,36 @@ const WEEKDAY = {
   summer: [
     ["03:00", "05:00", "London session", "Trade", "trade"],
     ["05:00", "06:00", "Gym", "", "life"],
-    ["06:00", "06:30", "Breakfast", "", "life"],
-    ["06:30", "07:30", "Bible study", "", "life"],
-    ["07:30", "08:00", "New York prep", "", "life"],
+    ["06:00", "08:00", "Reading and Bible study", "", "life"],
     ["08:00", "11:30", "New York session", "Trade", "trade"],
-    ["11:30", "13:00", "Lunch and break", "", "life"],
-    ["13:00", "15:00", "Backtesting", "Build", "build"],
-    ["15:00", "20:00", "Study", "Learn", "learn"],
-    ["20:00", "21:00", "Wind down, screens off", "", "life"],
+    ["11:30", "12:30", "Break", "", "life"],
+    ["12:30", "14:30", "Review and backtest today's trading", "Build", "build"],
+    ["14:30", "15:30", "Break", "", "life"],
+    ["15:30", "19:30", "Study", "Learn", "learn"],
+    ["19:30", "21:00", "Wind down, screens off", "", "life"],
     SLEEP],
   winter: [
     ["03:00", "04:00", "London prep: Frankfurt open, charts, alerts", "", "life"],
     ["04:00", "06:00", "London session", "Trade", "trade"],
-    ["06:00", "06:30", "Breakfast", "", "life"],
-    ["06:30", "07:30", "Bible study", "", "life"],
-    ["07:30", "08:30", "Gym", "", "life"],
-    ["08:30", "09:00", "Travel home and New York prep", "", "life"],
+    ["06:00", "07:00", "Gym", "", "life"],
+    ["07:00", "09:00", "Reading and Bible study", "", "life"],
     ["09:00", "12:30", "New York session", "Trade", "trade"],
-    ["12:30", "13:30", "Lunch and break", "", "life"],
-    ["13:30", "15:30", "Backtesting", "Build", "build"],
-    ["15:30", "20:00", "Study", "Learn", "learn"],
-    ["20:00", "21:00", "Wind down, screens off", "", "life"],
+    ["12:30", "13:30", "Break", "", "life"],
+    ["13:30", "15:30", "Review and backtest today's trading", "Build", "build"],
+    ["15:30", "19:30", "Study", "Learn", "learn"],
+    ["19:30", "21:00", "Wind down, screens off", "", "life"],
     SLEEP],
 };
-// Friday: lighter study, free evening, lights out 9:30.
-const friday = rows => rows.filter(r => r[4] !== "sleep" && r[0] !== "20:00")
-  .map(r => r[4] === "learn" ? [r[0], "18:30", "Study (lighter Friday)", "Learn", "learn"] : r)
-  .concat([["18:30", "21:30", "Free time", "", "life"], ["21:30", "06:30", "Lights out", "", "sleep"]]);
 const SATURDAY = [
-  ["06:30", "07:30", "Bible study", "", "life"],
-  ["09:30", "11:30", "Backtesting", "Build", "build"],
-  ["11:30", "12:30", "Lunch and break", "", "life"],
-  ["12:30", "17:00", "Study", "Learn", "learn"],
-  ["17:00", "00:00", "Free time", "", "life"],
+  ["08:00", "09:00", "Wake up and relax", "", "life"],
+  ["09:00", "13:00", "Study (long session)", "Learn", "learn"],
+  ["13:00", "21:00", "Free time", "", "life"],
 ];
 const SUNDAY = [
-  ["06:00", "07:00", "Prepare for church", "", "life"],
-  ["06:30", "07:30", "Bible study", "", "life"],
-  ["07:00", "12:00", "Church", "", "life"],
-  ["12:00", "14:00", "Rest and lunch", "", "life"],
-  ["14:00", "16:00", "Backtesting", "Build", "build"],
-  ["16:00", "20:30", "Study", "Learn", "learn"],
-  ["20:30", "21:00", "Wind down", "", "life"],
+  ["06:00", "14:00", "Church and home", "", "life"],
+  ["14:00", "15:00", "Rest", "", "life"],
+  ["15:00", "18:00", "Study (lighter: catch up and review)", "Learn", "learn"],
+  ["18:00", "21:00", "Free time and wind down", "", "life"],
   SLEEP,
 ];
 // Winter times = while the UK is on GMT (late October to late March).
@@ -1110,7 +1271,7 @@ function isWinter(d) {
 }
 function dayRows(d) {
   const w = WEEKDAY[isWinter(d) ? "winter" : "summer"], wd = d.getDay();
-  return wd === 0 ? SUNDAY : wd === 6 ? SATURDAY : wd === 5 ? friday(w) : w;
+  return wd === 0 ? SUNDAY : wd === 6 ? SATURDAY : w;
 }
 const hoursOf = (rows, kind) => rows.filter(r => r[4] === kind).reduce((h, r) => h + (toMin(r[1]) - toMin(r[0])) / 60, 0);
 let DAY = WEEKDAY.summer;
@@ -1133,7 +1294,7 @@ function renderDay() {
   const where = m ? ` · Milestone ${numOf(m)}` : "";
   const learnNext = [
     nm ? `First 30 min, maths: <b>${esc(nm[1])}</b>` : "",
-    np ? `Then Python: <b>${esc(np[1])}</b>` : "",
+    np ? `Then: <b>${esc(np[1])}</b>` : "",
     nl ? `If you get stuck building: <b>${esc(nl[1])}</b>` : "",
   ].filter(Boolean).join("<br>");
   const next = {
@@ -1151,12 +1312,120 @@ function renderDay() {
   document.getElementById("dayPlan").innerHTML = DAY.map((s, j) => next[s[4]] ? row(s, j) : "").join("");
   document.getElementById("dayList").innerHTML = DAY.map(row).join("");
   document.getElementById("daySummary").textContent = `${DAYS[wd]}'s full schedule · ${winter ? "winter" : "summer"} times`;
-  const w = WEEKDAY[winter ? "winter" : "summer"], f = friday(w), week = [w, w, w, w, f, SATURDAY, SUNDAY];
+  const w = WEEKDAY[winter ? "winter" : "summer"], week = [w, w, w, w, w, SATURDAY, SUNDAY];
   const b = week.reduce((h, r) => h + hoursOf(r, "build"), 0), l = week.reduce((h, r) => h + hoursOf(r, "learn"), 0);
   document.getElementById("dayHours").textContent =
     `Plan time: ${b} h backtesting + ${l} h study = ${b + l} h a week. The 2x pace needs about 30–35 h, so you have room to spare. Each study block starts with 30 minutes of maths from the Learning tab, and about 3 h a week goes to the Expertise tab.`;
 }
-setInterval(renderDay, 60000);
+setInterval(() => { renderDay(); renderToday(); }, 60000);
+
+// ---------- Today: one red must-do, a short list sized to your study window, rollover ----------
+// The day's list is fixed the first time you open the app that day. Anything you don't tick
+// stays at the front of the path, so tomorrow it comes back first (marked "Carried over").
+const MATH_MIN = 30, REVIEW_MIN = 20;
+const STUDY = { 0: ["15:00", "18:00"], 6: ["09:00", "13:00"] }; // Sunday, Saturday; weekdays below
+const studyWindow = wd => STUDY[wd] || ["15:30", "19:30"];
+const KIND_CHIP = { lesson: "Python", code: "Read code", book: "Read", video: "Watch", unit: "Maths", do: "Do", build: "Build" };
+const mins = n => n >= 60 ? `${Math.floor(n / 60)} h${n % 60 ? ` ${n % 60} min` : ""}` : `${n} min`;
+const pathItem = id => PY_ITEMS.find(it => it[0] === id);
+const phaseOf = id => PATH.find(p => p.items.some(it => it[0] === id));
+
+function dayCapacity(wd) {
+  const [a, b] = studyWindow(wd);
+  return toMin(b) - toMin(a) - MATH_MIN - (wd === 0 ? REVIEW_MIN : 0);
+}
+function planToday() {
+  const d = today(), p = state._day;
+  if (p && p.d === d) return p;
+  const carried = p ? p.ids.filter(id => !state[id]) : [];
+  const cap = dayCapacity(new Date().getDay()), ids = [];
+  let used = 0;
+  for (const it of PY_ITEMS) {          // strictly in order: never skip ahead past an unfinished step
+    if (state[it[0]]) continue;
+    if (ids.length && used + it[4] > cap) break;
+    ids.push(it[0]); used += it[4];
+  }
+  state._day = { d, ids, carried };
+  save(state);
+  return state._day;
+}
+
+function todayItemHTML(id, title, detail, kind, min, opts) {
+  const o = opts || {};
+  return `<label class="ti${o.must ? " must" : ""}${state[id] ? " done" : ""}">
+    <input type="checkbox" ${o.rev ? `data-rev="1"` : `data-id="${id}"`} ${o.checked ?? state[id] ? "checked" : ""}>
+    <span class="box"></span>
+    <div class="ti-body">
+      <div class="ti-top"><span class="chip">${KIND_CHIP[kind] || kind}</span><span class="ti-min">${mins(min)}</span>${o.carry ? `<span class="ti-carry">Carried over</span>` : ""}</div>
+      <div class="ti-t">${esc(title)}</div>
+      ${detail ? `<div class="ti-d">${esc(detail)}</div>` : ""}
+      ${o.must && state[id] ? `<div class="tv-must-done">Done. You moved forward today.</div>` : ""}
+    </div>
+  </label>`;
+}
+
+function renderToday() {
+  const now = new Date(), wd = now.getDay(), plan = planToday();
+  const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const [a, b] = studyWindow(wd);
+  const hint = wd === 6 ? " · your long session: a good day for the bigger tasks"
+             : wd === 0 ? " · lighter: catch up and review the week" : "";
+  document.getElementById("tvDate").textContent = `${DAYS[wd]}, ${MONTHS[now.getMonth()]} ${now.getDate()}`;
+  document.getElementById("tvWindow").textContent = `Study ${span(a, b)} · ${mins(toMin(b) - toMin(a))}${hint}`;
+
+  const ids = plan.ids.filter(pathItem), carried = new Set(plan.carried);
+  const mustId = ids[0];
+  const ph = phaseOf(mustId || (PY_ITEMS.find(it => !state[it[0]]) || [])[0]) || PATH[PATH.length - 1];
+  const phDone = ph.items.filter(it => state[it[0]]).length;
+  document.getElementById("tvPhase").innerHTML =
+    `<span>Phase ${ph.n} of ${PATH.length} · <b>${esc(ph.title)}</b></span><div class="bar"><i style="width:${phDone / ph.items.length * 100}%"></i></div><span>${phDone}/${ph.items.length}</span>`;
+
+  const must = mustId && pathItem(mustId);
+  document.getElementById("tvMust").innerHTML = must
+    ? todayItemHTML(must[0], must[1], must[2], must[3], must[4], { must: true, carry: carried.has(must[0]) })
+    : `<div class="tv-allclear">The whole path is done. Time for the next one.</div>`;
+
+  const nm = MATH_ITEMS.find(it => !state[it[0]]);
+  const stage = nm && MATH_STAGES.find(s => s.items.includes(nm));
+  let rows = "", total = must ? must[4] : 0;
+  if (nm) {
+    rows += todayItemHTML(nm[0], nm[1], `${nm[2]} · ${stage.res}`, nm[3] === "unit" ? "unit" : nm[3], MATH_MIN);
+    total += MATH_MIN;
+  }
+  ids.slice(1).forEach(id => {
+    const it = pathItem(id);
+    rows += todayItemHTML(it[0], it[1], it[2], it[3], it[4], { carry: carried.has(id) });
+    total += it[4];
+  });
+  if (wd === 0) {
+    state._rev = state._rev || {};
+    rows += todayItemHTML("rev", "Weekly review", "Look back at the week: what got done, what keeps carrying over, and one thing to change next week.", "do", REVIEW_MIN, { rev: true, checked: !!state._rev[plan.d] });
+    total += REVIEW_MIN;
+  }
+  document.getElementById("tvList").innerHTML = rows +
+    `<div class="tv-total">Planned: ${mins(total)} of your ${mins(toMin(b) - toMin(a))} window</div>`;
+
+  const allDone = ids.length && ids.every(id => state[id]);
+  const nextUp = PY_ITEMS.find(it => !state[it[0]] && !plan.ids.includes(it[0]));
+  document.getElementById("tvMore").innerHTML = allDone && nextUp
+    ? `<button class="tv-btn primary" id="tvPull" type="button">Everything's done · pull in the next task</button>` : "";
+
+  const ahead = PY_ITEMS.filter(it => !state[it[0]] && !plan.ids.includes(it[0])).slice(0, 5);
+  document.getElementById("tvUp").innerHTML = ahead.length
+    ? ahead.map(it => `<div class="tv-up"><span>${esc(it[1])}</span><span>${mins(it[4])}</span></div>`).join("")
+    : `<p class="note">Nothing left after today.</p>`;
+
+  const logged = state._log.filter(x => x.d === today());
+  document.getElementById("tvLogged").textContent = logged.length ? `Logged today: ${logged[logged.length - 1].t}` : "";
+}
+
+function showView(v) {
+  state._view = v;
+  document.getElementById("todayView").classList.toggle("hidden", v !== "today");
+  document.getElementById("fullView").classList.toggle("hidden", v === "today");
+  window.scrollTo(0, 0);
+  save(state);
+}
 
 function render() {
   TRACKS.forEach(t => document.getElementById(t.el).innerHTML = t.list.map(milestoneHTML).join(""));
@@ -1171,6 +1440,7 @@ function render() {
   renderLearning();
   renderRewards();
   updateProgress();
+  renderToday();
 }
 
 function renderLearning() {
@@ -1183,11 +1453,8 @@ function renderLearning() {
        <ol class="loop">${SESSION_LOOP.map(([k, v]) => `<li><b>${k}</b> ${esc(v)}</li>`).join("")}</ol>
        <p class="ltip">One function per session. Reading code feels like understanding it; predicting what a change will do proves it. Ask "why" freely: any concept that doesn't click gets a visual and a few analogies.</p>
      </details>` +
-    PY_PHASES.map(b => block(b, `<p class="res">Book: <b>${esc(b.book)}</b></p><p class="bintro">${esc(b.intro)}</p>`)).join("") +
-    `<div class="block"><h3>Phase 3 · The Pattern Learner</h3>
-       <div class="bwhen">Start once Maths Stage 4 is done (likely mid-2027)</div>
-       <p class="res">Book: <b>Pattern Recognition and Machine Learning — Christopher Bishop</b></p>
-       <p class="bintro">Graduate-level maths, so the Maths track comes first. Bishop's chapters are ticked in the Expertise tab: Ch. 1, then 3–4, then 14 and 13. Start when the agent's Pattern Learner is being built.</p></div>`;
+    PATH.map(b => block(Object.assign({}, b, { title: `Phase ${b.n} · ${b.title}` }),
+      `<p class="res">Books: <b>${esc(b.books)}</b></p><p class="bintro">${esc(b.goal)}</p>`)).join("");
   document.getElementById("learnMath").innerHTML =
     `<p class="ltip">From scratch, about 30 minutes a day before the Python session: roughly 9–10 months to be ready for Bishop. Practise every concept on your own trades, and link it to Python the same week (learn standard deviation, then calculate it on your R results).</p>` +
     MATH_STAGES.map(b => block(b, `<p class="res">${esc(b.res)}</p>`)).join("");
@@ -1272,17 +1539,17 @@ function updateProgress() {
   bc("base", EXPERTISE);
   bc("cs", CS_FOUNDATIONS);
   EXPERT_BLOCKS.forEach(b => bc(b.id, b.items));
-  PY_PHASES.concat(MATH_STAGES).forEach(b => bc(b.id, b.items));
+  PATH.concat(MATH_STAGES).forEach(b => bc(b.id, b.items));
 
   const pyDone = PY_ITEMS.filter(it => state[it[0]]).length, mDone = MATH_ITEMS.filter(it => state[it[0]]).length;
   const lDone = pyDone + mDone, lTotal = LEARN_ITEMS.length, days = new Set(state._log.map(x => x.d)).size;
   const stage = MATH_STAGES.find(b => b.items.some(it => !state[it[0]]));
   const np = PY_ITEMS.find(it => !state[it[0]]);
   document.getElementById("lrName").innerHTML = `Learning · <b>${stage ? stage.title.split(" · ")[0] : "Maths done"}</b>`;
-  document.getElementById("lrCount").textContent = `Python ${pyDone}/${PY_ITEMS.length} · Maths ${mDone}/${MATH_ITEMS.length}`;
+  document.getElementById("lrCount").textContent = `Path ${pyDone}/${PY_ITEMS.length} · Maths ${mDone}/${MATH_ITEMS.length}`;
   document.getElementById("lrBar").style.width = (lDone / lTotal * 100) + "%";
   document.getElementById("lrSub").textContent =
-    `${np ? `Next Python: ${np[1]}` : "Python track done"} · ${plural(days, "day")} of sessions logged`;
+    `${np ? `Next: ${np[1]}` : "Path done"} · ${plural(days, "day")} of sessions logged`;
 
   const xp = totalXP(), li = levelOf(xp), nextL = LEVELS[li + 1];
   document.getElementById("lvlName").innerHTML = `Level ${li + 1} · <b>${LEVELS[li][1]}</b>`;
@@ -1439,7 +1706,39 @@ document.getElementById("resetBtn").onclick = () => {
   }
 };
 
+// Today view: ticking, pulling in the next task, the one-line log, and switching views.
+document.getElementById("todayView").addEventListener("change", e => {
+  if (e.target.dataset.rev) {
+    state._rev = state._rev || {};
+    state._rev[state._day.d] = e.target.checked;
+    save(state); renderToday(); return;
+  }
+  const id = e.target.dataset.id;
+  if (!id) return;
+  onTick(e);
+  if (e.target.checked && state._day && state._day.ids[0] === id) toast("Must-do done. That's a step forward.", 2500);
+  renderToday();
+});
+document.getElementById("todayView").addEventListener("click", e => {
+  if (e.target.id !== "tvPull") return;
+  const next = PY_ITEMS.find(it => !state[it[0]] && !state._day.ids.includes(it[0]));
+  if (next) { state._day.ids.push(next[0]); save(state); renderToday(); }
+});
+function addTodayLog() {
+  const input = document.getElementById("tvLog"), t = input.value.trim();
+  if (!t) { input.focus(); return; }
+  state._log.push({ d: today(), t });
+  save(state); input.value = "";
+  renderLog(); updateProgress(); renderToday();
+  toast("Logged");
+}
+document.getElementById("tvLogAdd").onclick = addTodayLog;
+document.getElementById("tvLog").addEventListener("keydown", e => { if (e.key === "Enter") addTodayLog(); });
+document.getElementById("toFull").onclick = () => showView("full");
+document.getElementById("toToday").onclick = () => { renderToday(); showView("today"); };
+
 render();
+showView("today");
 </script>
 </body>
 </html>
